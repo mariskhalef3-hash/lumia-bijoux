@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumia Bijoux | Bracelets inox, paiement a la livraison</title>
+<meta name="description" content="Bracelets en acier inoxydable. Livraison dans les 58 wilayas, paiement a la livraison.">
+<style>
+:root{--tx:#111;--mut:#6b6b6b;--bd:#e5e5e5;--gr:#f2f2f2;--ac:#b8892f}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit;text-decoration:none}
+header{display:flex;align-items:center;gap:28px;padding:18px 32px;background:#f8f9fc;border-bottom:1px solid var(--bd)}
+.logo{font-weight:700;font-size:20px}
+nav{display:flex;gap:22px;font-size:15px;flex:1}
+nav a:hover{color:var(--ac)}
+.hero{background:linear-gradient(135deg,#1e1a14 0%,#4a3a1c 55%,#8a6a2a 100%);color:#fff;text-align:center;padding:90px 20px}
+.hero h1{margin:0 0 22px;font-size:clamp(30px,6vw,56px);line-height:1.1}
+.hero p{margin:0 0 26px;opacity:.85}
+.hero a{display:inline-block;border:1.5px solid #fff;padding:13px 28px;border-radius:12px;font-weight:600}
+.hero a:hover{background:#fff;color:#111}
+section{padding:40px 32px;max-width:1300px;margin:auto}
+h2{margin:0 0 22px;font-size:26px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.item{cursor:pointer}
+.pic{aspect-ratio:1;background:var(--gr);display:flex;align-items:center;justify-content:center;transition:filter .2s}
+.item:hover .pic{filter:brightness(.95)}
+.ring{width:46%;aspect-ratio:1;border-radius:50%;border:14px solid;box-shadow:0 8px 16px rgba(0,0,0,.18)}
+.item h3{margin:12px 0 4px;font-size:15px;font-weight:500}
+.item .price{font-size:14px;font-weight:600}
+.item .d{font-size:13px;color:var(--mut);margin-top:2px}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-top:10px}
+.badges div{padding:20px;background:var(--gr);border-radius:14px;font-size:14px;color:var(--mut)}
+.badges b{display:block;color:var(--tx);font-size:16px;margin-bottom:4px}
+footer{border-top:1px solid var(--bd);margin-top:20px;padding:26px 32px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--mut)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:9;padding:10px}.modal.on{display:flex}
+.sheet{background:#fff;width:100%;max-width:460px;max-height:95%;overflow:auto;border-radius:16px;padding:20px}
+.row{display:flex;justify-content:space-between;align-items:center}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+input,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx);font-size:15px}
+.btn{background:#111;color:#fff;border:0;padding:13px 16px;border-radius:12px;font-weight:600;cursor:pointer;font-size:15px}
+.btn:disabled{opacity:.5}
+.sum{margin-top:14px;padding:12px;background:var(--gr);border-radius:10px;font-size:14px}
+.sum div{display:flex;justify-content:space-between;padding:2px 0}
+.sum .t{font-weight:700;border-top:1px solid var(--bd);margin-top:6px;padding-top:8px}
+.ok{text-align:center;padding:16px 0}.mut{color:var(--mut)}
+@media(max-width:800px){
+  header{padding:14px 18px;gap:16px}section{padding:28px 18px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .badges{grid-template-columns:1fr}.hero{padding:60px 20px}
+}
+</style></head><body>
+<header id="top">
+  <a class="logo" href="#top">Lumia Bijoux</a>
+  <nav><a href="#top">Accueil</a><a href="#produits">Catalogue</a><a href="#contact">Contact</a></nav>
+</header>
+<div class="hero">
+  <h1>Decouvre nos bracelets en acier inoxydable</h1>
+  <p>Ne noircit pas. Livraison dans les 58 wilayas.</p>
+  <a href="#produits">Voir tout</a>
+</div>
+<section id="produits">
+  <h2>Nos bracelets</h2>
+  <div class="grid" id="grid"></div>
+</section>
+<section>
+  <div class="badges">
+    <div><b>Paiement a la livraison</b>Tu paies en especes quand tu recois ton colis.</div>
+    <div><b>Livraison 58 wilayas</b>Frais calcules automatiquement selon ta wilaya.</div>
+    <div><b>Acier inoxydable</b>Resiste a l'eau, ne noircit pas.</div>
+  </div>
+</section>
+<footer id="contact">
+  <span>&copy; 2026 Lumia Bijoux</span>
+  <span>Instagram &nbsp;|&nbsp; TikTok &nbsp;|&nbsp; WhatsApp</span>
+</footer>
+<div class="modal" id="m"><div class="sheet" id="sheet"></div></div>
+<script>
+var C=null,cur=null;
+function $(i){return document.getElementById(i)}
+function fmt(n){return n.toLocaleString('fr-FR')+' DA'}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+fetch('/api/config').then(function(r){return r.json()}).then(function(c){
+  C=c;
+  $('grid').innerHTML=c.products.map(function(x){return '<div class="item" onclick="openF('+x.id+')"><div class="pic"><div class="ring" style="border-color:'+x.color+'"></div></div><h3>'+esc(x.name)+'</h3><div class="price">'+fmt(x.price)+'</div><div class="d">'+esc(x.desc)+'</div></div>'}).join('');
+}).catch(function(){$('grid').innerHTML='<p class="mut">Chargement impossible, reessaie dans un instant.</p>'});
+function openF(id){
+  cur=C.products.filter(function(x){return x.id===id})[0];
+  $('sheet').innerHTML='<div class="row"><b>'+esc(cur.name)+'</b><button style="background:none;border:0;font-size:24px;cursor:pointer" onclick="closeM()">x</button></div>'
+  +'<label>Nom complet</label><input id="f_n">'
+  +'<label>Telephone</label><input id="f_t" type="tel" placeholder="05 / 06 / 07 ...">'
+  +'<label>Wilaya</label><select id="f_w" onchange="calc()"><option value="">Choisir...</option>'+C.wilayas.map(function(w){return '<option>'+esc(w.n)+'</option>'}).join('')+'</select>'
+  +'<label>Adresse</label><input id="f_a" placeholder="Commune, rue, numero">'
+  +'<label>Quantite</label><select id="f_q" onchange="calc()"><option>1</option><option>2</option><option>3</option></select>'
+  +'<div class="sum" id="sum"></div>'
+  +'<button class="btn" id="go" style="width:100%;margin-top:14px" onclick="send()">Confirmer la commande</button>'
+  +'<p class="mut" style="font-size:12px;text-align:center">Paiement en especes a la reception.</p>';
+  calc();$('m').classList.add('on');
+}
+function ship(){var w=C.wilayas.filter(function(x){return x.n===$('f_w').value})[0];return w?w.s:null}
+function calc(){var q=+$('f_q').value,s=ship(),sub=cur.price*q;
+  $('sum').innerHTML='<div><span>Sous-total</span><span>'+fmt(sub)+'</span></div><div><span>Livraison</span><span>'+(s===null?'choisir wilaya':fmt(s))+'</span></div><div class="t"><span>Total a payer</span><span>'+(s===null?fmt(sub):fmt(sub+s))+'</span></div>'}
+function send(){
+  var b=$('go');b.disabled=true;b.textContent='Envoi...';
+  var body={name:$('f_n').value,phone:$('f_t').value,wilaya:$('f_w').value,address:$('f_a').value,items:[{productId:cur.id,qty:+$('f_q').value}]};
+  fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
+  .then(function(x){
+    if(!x.ok){alert(x.d.error||'Erreur');b.disabled=false;b.textContent='Confirmer la commande';return}
+    $('sheet').innerHTML='<div class="ok"><div style="font-size:48px">&#9989;</div><h2>Commande recue !</h2><p class="mut">Nous t\'appelons bientot pour confirmer.<br>Total a payer a la livraison : <b>'+fmt(x.d.total)+'</b></p><button class="btn" onclick="closeM()">Fermer</button></div>';
+  }).catch(function(){alert('Connexion impossible, reessaie.');b.disabled=false;b.textContent='Confirmer la commande'});
+}
+function closeM(){$('m').classList.remove('on')}
+</script></body></html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><title>Admin | Lumia Bijoux</title>
+<style>
+:root{--bg:#faf8f5;--card:#fff;--tx:#1c1b1a;--mut:#6f6b66;--ac:#b8892f;--bd:#e7e2da}
+@media(prefers-color-scheme:dark){:root{--bg:#161514;--card:#201f1d;--tx:#f2eee8;--mut:#a09a92;--ac:#d9a94a;--bd:#34312d}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding:18px;max-width:760px;margin:auto}
+input,select,button{padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font-size:15px}
+button{background:var(--ac);color:#fff;border:0;cursor:pointer;font-weight:600}
+.o{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.mut{color:var(--mut)}
+</style></head><body>
+<h2>Commandes Lumia Bijoux</h2>
+<div class="row" id="login"><input id="pw" type="password" placeholder="Mot de passe admin"><button onclick="load()">Entrer</button></div>
+<div id="list"></div>
+<script>
+var PW='';
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function load(){
+  PW=document.getElementById('pw').value||PW;
+  fetch('/api/admin/orders',{headers:{'x-admin-password':PW}}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(rows){
+    document.getElementById('login').style.display='none';
+    var st=['nouvelle','confirmee','expediee','livree','annulee'];
+    document.getElementById('list').innerHTML=rows.length?rows.map(function(o){
+      return '<div class="o"><div class="row"><b>#'+o.id+' '+esc(o.name)+'</b><select onchange="setS('+o.id+',this.value)">'+st.map(function(s){return '<option'+(s===o.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select></div>'
+      +'<div>'+esc(o.product)+' x '+o.qty+' | <b>'+o.total.toLocaleString('fr-FR')+' DA</b></div>'
+      +'<div class="mut"><a href="tel:'+esc(o.phone)+'">'+esc(o.phone)+'</a> | '+esc(o.wilaya)+' | '+esc(o.address)+'</div>'
+      +'<div class="mut">'+new Date(o.created_at).toLocaleString('fr-FR')+'</div></div>'}).join(''):'<p class="mut">Aucune commande.</p>';
+  }).catch(function(){alert('Mot de passe incorrect')});
+}
+function setS(id,s){fetch('/api/admin/orders/'+id,{method:'PATCH',headers:{'Content-Type':'application/json','x-admin-password':PW},body:JSON.stringify({status:s})})}
+</script></body></html>
