@@ -1,32 +1,215 @@
 <!DOCTYPE html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex"><title>Admin | Lumia Bijoux</title>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Commandes | Lumia Bijoux</title>
 <style>
-:root{--bg:#faf8f5;--card:#fff;--tx:#1c1b1a;--mut:#6f6b66;--ac:#b8892f;--bd:#e7e2da}
-@media(prefers-color-scheme:dark){:root{--bg:#161514;--card:#201f1d;--tx:#f2eee8;--mut:#a09a92;--ac:#d9a94a;--bd:#34312d}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding:18px;max-width:760px;margin:auto}
-input,select,button{padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font-size:15px}
-button{background:var(--ac);color:#fff;border:0;cursor:pointer;font-weight:600}
-.o{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.mut{color:var(--mut)}
-</style></head><body>
-<h2>Commandes Lumia Bijoux</h2>
-<div class="row" id="login"><input id="pw" type="password" placeholder="Mot de passe admin"><button onclick="load()">Entrer</button></div>
-<div id="list"></div>
-<script>
-var PW='';
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function load(){
-  PW=document.getElementById('pw').value||PW;
-  fetch('/api/admin/orders',{headers:{'x-admin-password':PW}}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(rows){
-    document.getElementById('login').style.display='none';
-    var st=['nouvelle','confirmee','expediee','livree','annulee'];
-    document.getElementById('list').innerHTML=rows.length?rows.map(function(o){
-      return '<div class="o"><div class="row"><b>#'+o.id+' '+esc(o.name)+'</b><select onchange="setS('+o.id+',this.value)">'+st.map(function(s){return '<option'+(s===o.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select></div>'
-      +'<div>'+esc(o.product)+' x '+o.qty+' | <b>'+o.total.toLocaleString('fr-FR')+' DA</b></div>'
-      +'<div class="mut"><a href="tel:'+esc(o.phone)+'">'+esc(o.phone)+'</a> | '+esc(o.wilaya)+' | '+esc(o.address)+'</div>'
-      +'<div class="mut">'+new Date(o.created_at).toLocaleString('fr-FR')+'</div></div>'}).join(''):'<p class="mut">Aucune commande.</p>';
-  }).catch(function(){alert('Mot de passe incorrect')});
+:root{
+  --bg:#f3f4f6;--card:#fff;--tx:#17181a;--mut:#6b7078;--bd:#e3e5e9;
+  --ac:#a97c24;--ac-tx:#fff;--bad:#c0392b;
+  --new:#b9801a;--conf:#2f6fdb;--ship:#7a52d1;--done:#1f8a4c;--canc:#8a9098;
 }
-function setS(id,s){fetch('/api/admin/orders/'+id,{method:'PATCH',headers:{'Content-Type':'application/json','x-admin-password':PW},body:JSON.stringify({status:s})})}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#101112;--card:#1a1b1d;--tx:#f1f2f3;--mut:#9aa0a8;--bd:#2c2e31;
+    --ac:#d9a94a;--ac-tx:#1a1405;--bad:#ef6f61;
+    --new:#e0a63a;--conf:#6b9cf0;--ship:#a68af0;--done:#4cc27f;--canc:#7a8088}
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 48px}
+h1{margin:0;font-size:22px;font-weight:700}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border-radius:10px;min-height:44px;padding:0 16px;border:1px solid var(--bd);background:var(--card);font-weight:600}
+button:disabled{opacity:.6;cursor:default}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+button.primary{background:var(--ac);border-color:var(--ac);color:var(--ac-tx)}
+button.ghost{background:transparent}
+button.danger{color:var(--bad)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 16px}
+.top small{display:block;color:var(--mut);font-size:13px;margin-top:2px}
+.acts{display:flex;gap:8px}
+.acts button{min-height:40px;font-size:14px}
+
+.login{max-width:380px;margin:12vh auto 0;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:24px}
+.login p{margin:4px 0 16px;color:var(--mut);font-size:14px}
+.login input{width:100%;min-height:46px;padding:0 14px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
+.login button{width:100%;margin-top:12px}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin:8px 0 0}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:20px}
+.stat span{font-size:13px;color:var(--mut)}
+
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.tab{flex:none;min-height:38px;padding:0 14px;border-radius:999px;font-size:14px}
+.tab[aria-pressed="true"]{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.tab i{font-style:normal;opacity:.65;margin-left:6px}
+#q{width:100%;min-height:44px;padding:0 14px;border:1px solid var(--bd);border-radius:10px;background:var(--card);margin-bottom:12px}
+
+.card{background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--st);border-radius:12px;padding:14px;margin-bottom:12px}
+.s-nouvelle{--st:var(--new)}
+.s-confirmee{--st:var(--conf)}
+.s-expediee{--st:var(--ship)}
+.s-livree{--st:var(--done)}
+.s-annulee{--st:var(--canc)}
+.head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.head b{font-size:16px}
+.mut{color:var(--mut)}
+.small{font-size:13px}
+.badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;color:var(--st);border:1px solid var(--st);white-space:nowrap}
+.items{margin:10px 0 4px;word-break:break-word}
+.total{font-size:18px;font-weight:700}
+.total span{font-size:13px;font-weight:400;color:var(--mut);margin-left:6px}
+.where{margin:6px 0 10px;font-size:14px;word-break:break-word}
+.contact{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--bd);border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;color:var(--tx)}
+.row-acts{display:flex;gap:8px;flex-wrap:wrap}
+.row-acts .primary{flex:1 1 200px}
+.s-annulee .items,.s-annulee .total{text-decoration:line-through;opacity:.6}
+.empty{text-align:center;color:var(--mut);padding:40px 10px}
+</style></head><body>
+<div class="wrap">
+  <header class="top">
+    <div><h1>Commandes</h1><small>Lumia Bijoux</small></div>
+    <div class="acts" id="acts" hidden>
+      <button class="ghost" id="refresh">Actualiser</button>
+      <button class="ghost" id="out">Se déconnecter</button>
+    </div>
+  </header>
+
+  <section class="login" id="login">
+    <h1>Espace commandes</h1>
+    <p>Entre ton mot de passe pour voir les commandes.</p>
+    <input id="pw" type="password" placeholder="Mot de passe" autocomplete="current-password">
+    <div class="err" id="err" aria-live="polite"></div>
+    <button class="primary" id="enter">Se connecter</button>
+  </section>
+
+  <main id="app" hidden>
+    <div class="stats" id="stats"></div>
+    <div class="tabs" id="tabs"></div>
+    <input id="q" type="search" placeholder="Chercher un nom, un numéro, une wilaya">
+    <div id="list"></div>
+  </main>
+</div>
+<script>
+var PW='',ROWS=[],FILTER='all',TIMER=null;
+var LABEL={nouvelle:'Nouvelle',confirmee:'Confirmée',expediee:'Expédiée',livree:'Livrée',annulee:'Annulée'};
+var NEXT={nouvelle:['confirmee','Confirmer la commande'],confirmee:['expediee','Marquer comme expédiée'],expediee:['livree','Marquer comme livrée']};
+var TABS=[['all','Toutes'],['nouvelle','Nouvelles'],['confirmee','Confirmées'],['expediee','Expédiées'],['livree','Livrées'],['annulee','Annulées']];
+
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function money(n){return Number(n).toLocaleString('fr-FR')+' DA'}
+function api(path,opts){
+  opts=opts||{};
+  opts.headers=Object.assign({'x-admin-password':PW},opts.headers||{});
+  return fetch(path,opts);
+}
+function fetchOrders(){
+  return api('/api/admin/orders').then(function(r){
+    if(r.status===401)return{err:'auth'};
+    if(!r.ok)return{err:'server'};
+    return r.json().then(function(rows){return{rows:rows}});
+  }).catch(function(){return{err:'net'}});
+}
+function showErr(m){$('err').textContent=m}
+
+function login(){
+  var v=$('pw').value;
+  if(!v){showErr('Entre ton mot de passe.');return}
+  PW=v;showErr('');
+  var b=$('enter');b.disabled=true;b.textContent='Connexion...';
+  fetchOrders().then(function(res){
+    b.disabled=false;b.textContent='Se connecter';
+    if(res.err==='auth'){PW='';showErr('Mot de passe incorrect. Vérifie et réessaie.');return}
+    if(res.err){showErr('Le serveur ne répond pas. Si le site vient de se réveiller, réessaie dans quelques secondes.');return}
+    ROWS=res.rows;
+    $('pw').value='';
+    $('login').hidden=true;$('app').hidden=false;$('acts').hidden=false;
+    render();
+    TIMER=setInterval(refresh,60000);
+  });
+}
+function logout(){
+  PW='';ROWS=[];FILTER='all';
+  if(TIMER){clearInterval(TIMER);TIMER=null}
+  $('app').hidden=true;$('acts').hidden=true;$('login').hidden=false;
+  $('list').innerHTML='';
+}
+function refresh(){
+  return fetchOrders().then(function(res){
+    if(res.rows){ROWS=res.rows;render()}
+    else if(res.err==='auth'){logout()}
+  });
+}
+
+function render(){
+  var c={all:ROWS.length,nouvelle:0,confirmee:0,expediee:0,livree:0,annulee:0},cash=0;
+  ROWS.forEach(function(o){c[o.status]=(c[o.status]||0)+1;if(o.status==='livree')cash+=Number(o.total)});
+  $('stats').innerHTML=
+    '<div class="stat"><b>'+c.nouvelle+'</b><span>à confirmer</span></div>'+
+    '<div class="stat"><b>'+(c.confirmee+c.expediee)+'</b><span>en cours</span></div>'+
+    '<div class="stat"><b>'+money(cash)+'</b><span>encaissé (livrées)</span></div>';
+  $('tabs').innerHTML=TABS.map(function(t){
+    return '<button class="tab" aria-pressed="'+(FILTER===t[0])+'" onclick="setF(\''+t[0]+'\')">'+t[1]+'<i>'+(c[t[0]]||0)+'</i></button>';
+  }).join('');
+  var q=$('q').value.trim().toLowerCase();
+  var rows=ROWS.filter(function(o){
+    if(FILTER!=='all'&&o.status!==FILTER)return false;
+    if(!q)return true;
+    return (o.name+' '+o.phone+' '+o.wilaya+' '+o.address+' #'+o.id).toLowerCase().indexOf(q)>-1;
+  });
+  if(!rows.length){
+    $('list').innerHTML='<p class="empty">'+(ROWS.length?'Aucune commande dans cette liste.':'Aucune commande pour le moment. Partage ton lien pour recevoir la première.')+'</p>';
+    return;
+  }
+  $('list').innerHTML=rows.map(card).join('');
+}
+
+function card(o){
+  var id=Number(o.id);
+  var d=new Date(o.created_at).toLocaleString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  var digits=String(o.phone).replace(/\D/g,'');
+  var wa='213'+digits.replace(/^0/,'');
+  var note=o.status==='livree'?'encaissé':(o.status==='annulee'?'annulée':'à encaisser à la livraison');
+  var nx=NEXT[o.status],acts='';
+  if(nx)acts+='<button class="primary" onclick="setS('+id+',\''+nx[0]+'\')">'+nx[1]+'</button>';
+  if(o.status==='annulee')acts+='<button class="primary" onclick="setS('+id+',\'nouvelle\')">Remettre en nouvelle</button>';
+  if(nx)acts+='<button class="ghost danger" onclick="setS('+id+',\'annulee\')">Annuler</button>';
+  return '<article class="card s-'+esc(o.status)+'">'+
+    '<div class="head"><div><b>#'+id+' '+esc(o.name)+'</b><div class="mut small">'+esc(d)+'</div></div>'+
+    '<span class="badge">'+esc(LABEL[o.status]||o.status)+'</span></div>'+
+    '<div class="items">'+esc(o.product)+'</div>'+
+    '<div class="total">'+money(o.total)+'<span>'+note+'</span></div>'+
+    '<div class="where mut">'+esc(o.wilaya)+', '+esc(o.address)+'</div>'+
+    '<div class="contact"><a class="chip" href="tel:'+esc(digits)+'">Appeler '+esc(o.phone)+'</a>'+
+    '<a class="chip" href="https://wa.me/'+esc(wa)+'" target="_blank" rel="noopener">WhatsApp</a></div>'+
+    (acts?'<div class="row-acts">'+acts+'</div>':'')+
+    '</article>';
+}
+
+function setF(f){FILTER=f;render()}
+function setS(id,s){
+  if(s==='annulee'&&!confirm('Annuler la commande #'+id+' ?'))return;
+  var o=ROWS.filter(function(x){return Number(x.id)===id})[0];
+  if(!o)return;
+  var old=o.status;
+  o.status=s;render();
+  api('/api/admin/orders/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:s})})
+    .then(function(r){if(!r.ok)throw 0})
+    .catch(function(){o.status=old;render();alert("Le changement n'a pas été enregistré. Réessaie.")});
+}
+
+$('enter').onclick=login;
+$('pw').onkeydown=function(e){if(e.key==='Enter')login()};
+$('out').onclick=logout;
+$('q').oninput=render;
+$('refresh').onclick=function(){
+  var b=this;b.disabled=true;b.textContent='Actualisation...';
+  refresh().then(function(){b.disabled=false;b.textContent='Actualiser'});
+};
 </script></body></html>
