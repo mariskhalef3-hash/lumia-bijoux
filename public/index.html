@@ -21,7 +21,8 @@ section{padding:40px 32px;max-width:1300px;margin:auto}
 h2{margin:0 0 22px;font-size:26px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .item{cursor:pointer}
-.pic{aspect-ratio:1;background:var(--gr);display:flex;align-items:center;justify-content:center;transition:filter .2s}
+.pic{aspect-ratio:1;background:var(--gr);display:flex;align-items:center;justify-content:center;transition:filter .2s;overflow:hidden;border-radius:12px}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
 .item:hover .pic{filter:brightness(.95)}
 .ring{width:46%;aspect-ratio:1;border-radius:50%;border:14px solid;box-shadow:0 8px 16px rgba(0,0,0,.18)}
 .item h3{margin:12px 0 4px;font-size:15px;font-weight:500}
@@ -33,6 +34,18 @@ h2{margin:0 0 22px;font-size:26px}
 footer{border-top:1px solid var(--bd);margin-top:20px;padding:26px 32px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--mut)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:9;padding:10px}.modal.on{display:flex}
 .sheet{background:#fff;width:100%;max-width:460px;max-height:95%;overflow:auto;border-radius:16px;padding:20px}
+.pic{position:relative}
+.pic .alt{position:absolute;inset:0;opacity:0;transition:opacity .25s}
+.item:hover .pic .alt{opacity:1}
+.car{position:relative;margin:12px 0 8px;touch-action:pan-y}
+.mimg{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}
+.car button{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.88);color:#111;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.car .prev{left:8px}
+.car .next{right:8px}
+.car .cnt{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;padding:3px 9px;border-radius:999px}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px}
+.thumbs img{flex:none;width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid transparent;opacity:.65;cursor:pointer}
+.thumbs img.on{border-color:var(--ac);opacity:1}
 .row{display:flex;justify-content:space-between;align-items:center}
 label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
 input,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx);font-size:15px}
@@ -78,13 +91,22 @@ var C=null,cur=null;
 function $(i){return document.getElementById(i)}
 function fmt(n){return n.toLocaleString('fr-FR')+' DA'}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function pic(x){
+  if(!x.img)return '<div class="ring" style="border-color:'+esc(x.color)+'"></div>';
+  return '<img src="'+esc(x.img)+'" alt="'+esc(x.name)+'" loading="lazy">'
+    +(x.imgs&&x.imgs[1]?'<img class="alt" src="'+esc(x.imgs[1])+'" alt="" loading="lazy">':'');
+}
 fetch('/api/config').then(function(r){return r.json()}).then(function(c){
   C=c;
-  $('grid').innerHTML=c.products.map(function(x){return '<div class="item" onclick="openF('+x.id+')"><div class="pic"><div class="ring" style="border-color:'+x.color+'"></div></div><h3>'+esc(x.name)+'</h3><div class="price">'+fmt(x.price)+'</div><div class="d">'+esc(x.desc)+'</div></div>'}).join('');
+  if(!c.products.length){$('grid').innerHTML='<p class="mut">Les produits arrivent bientot.</p>';return}
+  $('grid').innerHTML=c.products.map(function(x){return '<div class="item" onclick="openF('+Number(x.id)+')"><div class="pic">'+pic(x)+'</div><h3>'+esc(x.name)+'</h3><div class="price">'+fmt(x.price)+'</div><div class="d">'+esc(x.desc)+'</div></div>'}).join('');
 }).catch(function(){$('grid').innerHTML='<p class="mut">Chargement impossible, reessaie dans un instant.</p>'});
 function openF(id){
   cur=C.products.filter(function(x){return x.id===id})[0];
+  if(!cur)return;
   $('sheet').innerHTML='<div class="row"><b>'+esc(cur.name)+'</b><button style="background:none;border:0;font-size:24px;cursor:pointer" onclick="closeM()">x</button></div>'
+   +gal(cur)
+  +(cur.desc?'<p class="mut" style="margin:8px 0 0">'+esc(cur.desc)+'</p>':'')
   +'<label>Nom complet</label><input id="f_n">'
   +'<label>Telephone</label><input id="f_t" type="tel" placeholder="05 / 06 / 07 ...">'
   +'<label>Wilaya</label><select id="f_w" onchange="calc()"><option value="">Choisir...</option>'+C.wilayas.map(function(w){return '<option>'+esc(w.n)+'</option>'}).join('')+'</select>'
@@ -95,6 +117,36 @@ function openF(id){
   +'<p class="mut" style="font-size:12px;text-align:center">Paiement en especes a la reception.</p>';
   calc();$('m').classList.add('on');
 }
+var gi=0,gx=0;
+function gal(x){
+  var im=(x.imgs&&x.imgs.length)?x.imgs:(x.img?[x.img]:[]);
+  if(!im.length)return '';
+  gi=0;
+  var multi=im.length>1;
+  return '<div class="car"'+(multi?' ontouchstart="tS(event)" ontouchend="tE(event)"':'')+'>'
+    +'<img class="mimg" id="mimg" src="'+esc(im[0])+'" alt="'+esc(x.name)+'">'
+    +(multi?'<button class="prev" aria-label="Photo precedente" onclick="stepImg(-1)">&#8249;</button><button class="next" aria-label="Photo suivante" onclick="stepImg(1)">&#8250;</button><span class="cnt" id="cnt">1 / '+im.length+'</span>':'')
+    +'</div>'
+    +(multi?'<div class="thumbs" id="thumbs">'+im.map(function(u,i){return '<img src="'+esc(u)+'" alt="" class="'+(i===0?'on':'')+'" onclick="showImg('+i+')">'}).join('')+'</div>':'');
+}
+function showImg(i){
+  var t=$('thumbs').children;
+  gi=(i+t.length)%t.length;
+  for(var k=0;k<t.length;k++)t[k].classList.remove('on');
+  t[gi].classList.add('on');
+  $('mimg').src=t[gi].src;
+  $('cnt').textContent=(gi+1)+' / '+t.length;
+}
+function stepImg(d){showImg(gi+d)}
+function tS(e){gx=e.changedTouches[0].clientX}
+function tE(e){var dx=e.changedTouches[0].clientX-gx;if(Math.abs(dx)>40)stepImg(dx<0?1:-1)}
+document.addEventListener('keydown',function(e){
+  if(!$('m').classList.contains('on'))return;
+  if(e.key==='Escape'){closeM();return}
+  if(!$('thumbs'))return;
+  if(e.key==='ArrowRight')stepImg(1);
+  if(e.key==='ArrowLeft')stepImg(-1);
+});
 function ship(){var w=C.wilayas.filter(function(x){return x.n===$('f_w').value})[0];return w?w.s:null}
 function calc(){var q=+$('f_q').value,s=ship(),sub=cur.price*q;
   $('sum').innerHTML='<div><span>Sous-total</span><span>'+fmt(sub)+'</span></div><div><span>Livraison</span><span>'+(s===null?'choisir wilaya':fmt(s))+'</span></div><div class="t"><span>Total a payer</span><span>'+(s===null?fmt(sub):fmt(sub+s))+'</span></div>'}

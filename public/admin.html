@@ -2,7 +2,7 @@
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Commandes | Lumia Bijoux</title>
+<title>Admin | Lumia Bijoux</title>
 <style>
 :root{
   --bg:#f3f4f6;--card:#fff;--tx:#17181a;--mut:#6b7078;--bd:#e3e5e9;
@@ -27,6 +27,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 button.primary{background:var(--ac);border-color:var(--ac);color:var(--ac-tx)}
 button.ghost{background:transparent}
 button.danger{color:var(--bad)}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 16px}
 .top small{display:block;color:var(--mut);font-size:13px;margin-top:2px}
 .acts{display:flex;gap:8px}
@@ -37,6 +38,10 @@ button.danger{color:var(--bad)}
 .login input{width:100%;min-height:46px;padding:0 14px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
 .login button{width:100%;margin-top:12px}
 .err{color:var(--bad);font-size:14px;min-height:20px;margin:8px 0 0}
+
+.nav{display:flex;gap:8px;margin-bottom:14px}
+.nav button{flex:1}
+.nav button[aria-pressed="true"]{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
@@ -70,10 +75,29 @@ button.danger{color:var(--bad)}
 .row-acts .primary{flex:1 1 200px}
 .s-annulee .items,.s-annulee .total{text-decoration:line-through;opacity:.6}
 .empty{text-align:center;color:var(--mut);padding:40px 10px}
+
+.pc{--st:var(--ac)}
+.pc.off{--st:var(--canc);opacity:.75}
+.add{--st:var(--done)}
+.add b{font-size:16px}
+.pf input,.add input:not([type=file]){width:100%;min-height:44px;padding:0 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
+.add input[type=file]{width:100%;padding:8px 0}
+.add button{width:100%;margin-top:8px}
+.pf{min-width:0}
+.ph{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+.ph figure{margin:0;width:88px;text-align:center}
+.ph img{width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid var(--bd);display:block}
+.ph figcaption{font-size:12px;color:var(--mut);margin:4px 0 4px;min-height:32px;display:flex;align-items:center;justify-content:center}
+.ph figcaption.main{color:var(--ac);font-weight:700}
+.mini{min-height:32px;padding:0 8px;font-size:12px;border-radius:8px;width:100%}
+.pc .row-acts{margin-top:12px}
+.pc .row-acts .primary{flex:1 1 140px}
+.msg{min-height:18px;margin:8px 0 0;color:var(--mut)}
+.msg.bad{color:var(--bad)}
 </style></head><body>
 <div class="wrap">
   <header class="top">
-    <div><h1>Commandes</h1><small>Lumia Bijoux</small></div>
+    <div><h1>Admin</h1><small>Lumia Bijoux</small></div>
     <div class="acts" id="acts" hidden>
       <button class="ghost" id="refresh">Actualiser</button>
       <button class="ghost" id="out">Se déconnecter</button>
@@ -81,22 +105,47 @@ button.danger{color:var(--bad)}
   </header>
 
   <section class="login" id="login">
-    <h1>Espace commandes</h1>
-    <p>Entre ton mot de passe pour voir les commandes.</p>
+    <h1>Espace admin</h1>
+    <p>Entre ton mot de passe pour continuer.</p>
     <input id="pw" type="password" placeholder="Mot de passe" autocomplete="current-password">
     <div class="err" id="err" aria-live="polite"></div>
     <button class="primary" id="enter">Se connecter</button>
   </section>
 
   <main id="app" hidden>
-    <div class="stats" id="stats"></div>
-    <div class="tabs" id="tabs"></div>
-    <input id="q" type="search" placeholder="Chercher un nom, un numéro, une wilaya">
-    <div id="list"></div>
+    <nav class="nav">
+      <button id="nav-o" aria-pressed="true">Commandes</button>
+      <button id="nav-p" aria-pressed="false">Produits</button>
+    </nav>
+
+    <section id="vo">
+      <div class="stats" id="stats"></div>
+      <div class="tabs" id="tabs"></div>
+      <input id="q" type="search" placeholder="Chercher un nom, un numéro, une wilaya">
+      <div id="list"></div>
+    </section>
+
+    <section id="vp" hidden>
+      <div class="card add">
+        <b>Ajouter un produit</b>
+        <label for="np-n">Nom</label>
+        <input id="np-n" maxlength="80" placeholder="Ex : Bracelet Argent Fin">
+        <label for="np-d">Description</label>
+        <input id="np-d" maxlength="200" placeholder="Ex : Acier inoxydable, ne noircit pas">
+        <label for="np-p">Prix (DA)</label>
+        <input id="np-p" type="number" inputmode="numeric" placeholder="2500">
+        <label for="np-f">Photos (facultatif, tu peux en choisir plusieurs)</label>
+        <input id="np-f" type="file" accept="image/*" multiple>
+        <div class="err" id="np-m" aria-live="polite"></div>
+        <button class="primary" id="np-go">Ajouter le produit</button>
+      </div>
+      <div id="plist"></div>
+    </section>
   </main>
 </div>
+<input type="file" id="pick" accept="image/*" multiple hidden>
 <script>
-var PW='',ROWS=[],FILTER='all',TIMER=null;
+var PW='',ROWS=[],PROD=[],FILTER='all',TIMER=null,VIEW='o',PICK=0;
 var LABEL={nouvelle:'Nouvelle',confirmee:'Confirmée',expediee:'Expédiée',livree:'Livrée',annulee:'Annulée'};
 var NEXT={nouvelle:['confirmee','Confirmer la commande'],confirmee:['expediee','Marquer comme expédiée'],expediee:['livree','Marquer comme livrée']};
 var TABS=[['all','Toutes'],['nouvelle','Nouvelles'],['confirmee','Confirmées'],['expediee','Expédiées'],['livree','Livrées'],['annulee','Annulées']];
@@ -118,6 +167,7 @@ function fetchOrders(){
 }
 function showErr(m){$('err').textContent=m}
 
+/* ---------- Connexion ---------- */
 function login(){
   var v=$('pw').value;
   if(!v){showErr('Entre ton mot de passe.');return}
@@ -130,15 +180,24 @@ function login(){
     ROWS=res.rows;
     $('pw').value='';
     $('login').hidden=true;$('app').hidden=false;$('acts').hidden=false;
+    setView('o');
     render();
     TIMER=setInterval(refresh,60000);
   });
 }
 function logout(){
-  PW='';ROWS=[];FILTER='all';
+  PW='';ROWS=[];PROD=[];FILTER='all';
   if(TIMER){clearInterval(TIMER);TIMER=null}
   $('app').hidden=true;$('acts').hidden=true;$('login').hidden=false;
-  $('list').innerHTML='';
+  $('list').innerHTML='';$('plist').innerHTML='';
+  setView('o');
+}
+function setView(v){
+  VIEW=v;
+  $('vo').hidden=(v!=='o');$('vp').hidden=(v!=='p');
+  $('nav-o').setAttribute('aria-pressed',v==='o');
+  $('nav-p').setAttribute('aria-pressed',v==='p');
+  if(v==='p'&&PW)loadProducts();
 }
 function refresh(){
   return fetchOrders().then(function(res){
@@ -147,6 +206,7 @@ function refresh(){
   });
 }
 
+/* ---------- Commandes ---------- */
 function render(){
   var c={all:ROWS.length,nouvelle:0,confirmee:0,expediee:0,livree:0,annulee:0},cash=0;
   ROWS.forEach(function(o){c[o.status]=(c[o.status]||0)+1;if(o.status==='livree')cash+=Number(o.total)});
@@ -204,12 +264,165 @@ function setS(id,s){
     .catch(function(){o.status=old;render();alert("Le changement n'a pas été enregistré. Réessaie.")});
 }
 
+/* ---------- Produits ---------- */
+function loadProducts(){
+  return api('/api/admin/products').then(function(r){
+    if(r.status===401){logout();throw 0}
+    if(!r.ok)throw 0;
+    return r.json();
+  }).then(function(rows){PROD=rows;renderProducts()})
+  .catch(function(){if(PW)$('plist').innerHTML='<p class="empty">Impossible de charger les produits. Réessaie.</p>'});
+}
+function renderProducts(){
+  if(!PROD.length){$('plist').innerHTML='<p class="empty">Aucun produit. Ajoute le premier ci-dessus.</p>';return}
+  $('plist').innerHTML=PROD.map(pcard).join('');
+}
+function pcard(p){
+  var id=Number(p.id),imgs=p.imgs||[];
+  var strip=imgs.length
+    ? '<div class="ph">'+imgs.map(function(im,k){
+        var iid=Number(im.id);
+        return '<figure><img src="'+esc(im.url)+'" alt="">'+
+          (k===0?'<figcaption class="main">Principale</figcaption>':'<figcaption><button class="mini" onclick="coverImg('+iid+')">Mettre en premier</button></figcaption>')+
+          '<button class="mini danger" onclick="delImg('+iid+')">Retirer</button></figure>';
+      }).join('')+'</div>'
+    : '<p class="mut small" style="margin:0 0 6px">Aucune photo pour l\'instant.</p>';
+  return '<article class="card pc'+(p.active?'':' off')+'">'+
+    strip+
+    '<div class="pf">'+
+    '<label for="pn-'+id+'">Nom</label><input id="pn-'+id+'" maxlength="80" value="'+esc(p.name)+'">'+
+    '<label for="pd-'+id+'">Description</label><input id="pd-'+id+'" maxlength="200" value="'+esc(p.description)+'">'+
+    '<label for="pp-'+id+'">Prix (DA)</label><input id="pp-'+id+'" type="number" inputmode="numeric" value="'+Number(p.price)+'">'+
+    '</div>'+
+    (p.active?'':'<p class="mut small">Ce produit est masqué : tes clients ne le voient pas.</p>')+
+    '<div class="row-acts">'+
+    '<button class="primary" onclick="saveP('+id+')">Enregistrer</button>'+
+    '<button onclick="pickPhoto('+id+')">Ajouter des photos</button>'+
+    '<button class="ghost" onclick="toggleP('+id+','+(p.active?'false':'true')+')">'+(p.active?'Masquer':'Afficher')+'</button>'+
+    '<button class="ghost danger" onclick="delP('+id+')">Supprimer</button>'+
+    '</div><p class="msg small" id="pm-'+id+'" aria-live="polite"></p></article>';
+}
+function pmsg(id,t,bad){
+  var e=$('pm-'+id);if(!e)return;
+  e.textContent=t;e.className='msg small'+(bad?' bad':'');
+}
+function jsonRes(r){return r.json().then(function(d){return{ok:r.ok,d:d}})}
+
+function saveP(id){
+  var body={name:$('pn-'+id).value,description:$('pd-'+id).value,price:Number($('pp-'+id).value)};
+  pmsg(id,'Enregistrement...');
+  api('/api/admin/products/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(jsonRes)
+    .then(function(x){
+      if(!x.ok){pmsg(id,x.d.error||'Erreur',1);return}
+      var p=PROD.filter(function(z){return Number(z.id)===id})[0];
+      if(p){p.name=body.name.trim();p.description=body.description.trim();p.price=body.price}
+      pmsg(id,'Enregistré. Le site est à jour.');
+    })
+    .catch(function(){pmsg(id,'Connexion impossible. Réessaie.',1)});
+}
+function toggleP(id,active){
+  api('/api/admin/products/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({active:active})})
+    .then(function(r){if(!r.ok)throw 0;return loadProducts()})
+    .catch(function(){pmsg(id,'Le changement a échoué. Réessaie.',1)});
+}
+function delP(id){
+  var p=PROD.filter(function(z){return Number(z.id)===id})[0];
+  if(!confirm('Supprimer définitivement "'+(p?p.name:'ce produit')+'" ? Tes anciennes commandes restent intactes.'))return;
+  api('/api/admin/products/'+id,{method:'DELETE'})
+    .then(function(r){if(!r.ok)throw 0;return loadProducts()})
+    .catch(function(){pmsg(id,'La suppression a échoué. Réessaie.',1)});
+}
+function delImg(imgId){
+  if(!confirm('Retirer cette photo ?'))return;
+  api('/api/admin/images/'+imgId,{method:'DELETE'})
+    .then(function(r){if(!r.ok)throw 0;return loadProducts()})
+    .catch(function(){alert('Le changement a échoué. Réessaie.')});
+}
+function coverImg(imgId){
+  api('/api/admin/images/'+imgId,{method:'PATCH'})
+    .then(function(r){if(!r.ok)throw 0;return loadProducts()})
+    .catch(function(){alert('Le changement a échoué. Réessaie.')});
+}
+
+/* Photos : reduites dans le navigateur (1000 px max, JPEG) puis envoyees une par une */
+function resize(file,max){
+  return new Promise(function(ok,ko){
+    var img=new Image(),url=URL.createObjectURL(file);
+    img.onload=function(){
+      var s=Math.min(1,max/Math.max(img.width,img.height));
+      var w=Math.round(img.width*s),h=Math.round(img.height*s);
+      var c=document.createElement('canvas');c.width=w;c.height=h;
+      var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      c.toBlob(function(b){b?ok(b):ko()},'image/jpeg',0.82);
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);ko()};
+    img.src=url;
+  });
+}
+function upload(id,file){
+  return resize(file,1000).then(function(blob){
+    return api('/api/admin/products/'+id+'/images',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:blob});
+  }).then(function(r){
+    if(r.ok)return;
+    return r.json().catch(function(){return{}}).then(function(d){throw{msg:d.error||'Erreur'}});
+  });
+}
+function uploadMany(id,files,onStep){
+  var list=Array.prototype.slice.call(files),i=0,res={fail:0,msg:''};
+  function next(){
+    if(i>=list.length)return Promise.resolve(res);
+    var f=list[i++];
+    if(onStep)onStep(i,list.length);
+    return upload(id,f).catch(function(e){res.fail++;if(e&&e.msg)res.msg=e.msg}).then(next);
+  }
+  return next();
+}
+function pickPhoto(id){PICK=id;$('pick').value='';$('pick').click()}
+$('pick').onchange=function(){
+  var files=Array.prototype.slice.call(this.files);
+  if(!files.length||!PICK)return;
+  var id=PICK;PICK=0;
+  pmsg(id,'Envoi de la photo 1 sur '+files.length+'...');
+  uploadMany(id,files,function(i,n){pmsg(id,'Envoi de la photo '+i+' sur '+n+'...')})
+    .then(function(res){
+      return loadProducts().then(function(){
+        if(res.fail)pmsg(id,res.fail+' photo(s) non envoyée(s). '+(res.msg||'Essaie une autre image.'),1);
+        else pmsg(id,files.length>1?'Photos enregistrées.':'Photo enregistrée.');
+      });
+    });
+};
+
+$('np-go').onclick=function(){
+  var b=this,m=$('np-m');m.textContent='';
+  var body={name:$('np-n').value,description:$('np-d').value,price:Number($('np-p').value)};
+  var files=Array.prototype.slice.call($('np-f').files);
+  b.disabled=true;b.textContent='Ajout...';
+  api('/api/admin/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(jsonRes)
+    .then(function(x){
+      if(!x.ok)throw{msg:x.d.error||'Erreur'};
+      var photos=files.length?uploadMany(x.d.id,files,function(i,n){b.textContent='Photo '+i+' sur '+n+'...'}):Promise.resolve({fail:0});
+      return photos.then(function(res){
+        if(res.fail)m.textContent='Produit ajouté, mais '+res.fail+' photo(s) non envoyée(s) : ajoute-les depuis la liste.';
+        $('np-n').value='';$('np-d').value='';$('np-p').value='';$('np-f').value='';
+        return loadProducts();
+      });
+    })
+    .catch(function(e){m.textContent=(e&&e.msg)||'Connexion impossible. Réessaie.'})
+    .then(function(){b.disabled=false;b.textContent='Ajouter le produit'});
+};
+
+/* ---------- Boutons du haut ---------- */
 $('enter').onclick=login;
 $('pw').onkeydown=function(e){if(e.key==='Enter')login()};
 $('out').onclick=logout;
+$('nav-o').onclick=function(){setView('o')};
+$('nav-p').onclick=function(){setView('p')};
 $('q').oninput=render;
 $('refresh').onclick=function(){
   var b=this;b.disabled=true;b.textContent='Actualisation...';
-  refresh().then(function(){b.disabled=false;b.textContent='Actualiser'});
+  (VIEW==='p'?loadProducts():refresh()).then(function(){b.disabled=false;b.textContent='Actualiser'});
 };
 </script></body></html>
