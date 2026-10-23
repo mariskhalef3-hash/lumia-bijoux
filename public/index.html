@@ -12,6 +12,8 @@ header{display:flex;align-items:center;gap:28px;padding:18px 32px;background:#f8
 .logo{font-weight:700;font-size:20px}
 nav{display:flex;gap:22px;font-size:15px;flex:1}
 nav a:hover{color:var(--ac)}
+.cartlink{font-weight:600;font-size:15px;border:1.5px solid var(--tx);border-radius:12px;padding:8px 14px;cursor:pointer;background:#fff}
+.cartlink:hover{background:var(--tx);color:#fff}
 .hero{background:linear-gradient(135deg,#1e1a14 0%,#4a3a1c 55%,#8a6a2a 100%);color:#fff;text-align:center;padding:90px 20px}
 .hero h1{margin:0 0 22px;font-size:clamp(30px,6vw,56px);line-height:1.1}
 .hero p{margin:0 0 26px;opacity:.85}
@@ -21,8 +23,10 @@ section{padding:40px 32px;max-width:1300px;margin:auto}
 h2{margin:0 0 22px;font-size:26px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .item{cursor:pointer}
-.pic{aspect-ratio:1;background:var(--gr);display:flex;align-items:center;justify-content:center;transition:filter .2s;overflow:hidden;border-radius:12px}
+.pic{aspect-ratio:1;background:var(--gr);display:flex;align-items:center;justify-content:center;transition:filter .2s;overflow:hidden;border-radius:12px;position:relative}
 .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.pic .alt{position:absolute;inset:0;opacity:0;transition:opacity .25s}
+.item:hover .pic .alt{opacity:1}
 .item:hover .pic{filter:brightness(.95)}
 .ring{width:46%;aspect-ratio:1;border-radius:50%;border:14px solid;box-shadow:0 8px 16px rgba(0,0,0,.18)}
 .item h3{margin:12px 0 4px;font-size:15px;font-weight:500}
@@ -34,9 +38,7 @@ h2{margin:0 0 22px;font-size:26px}
 footer{border-top:1px solid var(--bd);margin-top:20px;padding:26px 32px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--mut)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:9;padding:10px}.modal.on{display:flex}
 .sheet{background:#fff;width:100%;max-width:460px;max-height:95%;overflow:auto;border-radius:16px;padding:20px}
-.pic{position:relative}
-.pic .alt{position:absolute;inset:0;opacity:0;transition:opacity .25s}
-.item:hover .pic .alt{opacity:1}
+.xb{background:none;border:0;font-size:24px;cursor:pointer;line-height:1}
 .car{position:relative;margin:12px 0 8px;touch-action:pan-y}
 .mimg{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}
 .car button{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.88);color:#111;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25)}
@@ -46,6 +48,7 @@ footer{border-top:1px solid var(--bd);margin-top:20px;padding:26px 32px;display:
 .thumbs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px}
 .thumbs img{flex:none;width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid transparent;opacity:.65;cursor:pointer}
 .thumbs img.on{border-color:var(--ac);opacity:1}
+.pp{font-size:20px;font-weight:700;margin:10px 0 0}
 .row{display:flex;justify-content:space-between;align-items:center}
 label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
 input,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx);font-size:15px}
@@ -55,15 +58,34 @@ input,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10
 .sum div{display:flex;justify-content:space-between;padding:2px 0}
 .sum .t{font-weight:700;border-top:1px solid var(--bd);margin-top:6px;padding-top:8px}
 .ok{text-align:center;padding:16px 0}.mut{color:var(--mut)}
+.er{color:#c0392b;font-size:13px;min-height:18px;margin:8px 0 0}
+.line{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}
+.line .th{flex:none;width:56px;height:56px;border-radius:10px;background:var(--gr);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.line .th img{width:100%;height:100%;object-fit:cover}
+.line .th .ring{width:60%;border-width:6px;box-shadow:none}
+.line .li{flex:1;min-width:0;font-size:14px}
+.line .li b{display:block;font-weight:600}
+.qty{display:flex;align-items:center;gap:4px}
+.qty button{width:32px;height:32px;border:1px solid var(--bd);background:#fff;border-radius:8px;font-size:18px;cursor:pointer;line-height:1;padding:0}
+.qty span{min-width:20px;text-align:center;font-weight:600}
+.rm{background:none;border:0;color:var(--mut);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 0}
+.fab{position:fixed;right:16px;bottom:16px;z-index:8;background:#111;color:#fff;border:0;border-radius:999px;padding:14px 20px;font-weight:700;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.3);cursor:pointer;display:none}
+.fab.on{display:block}
+.toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:12;background:#111;color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:none;align-items:center;gap:12px;font-size:14px;max-width:92%;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.toast.on{display:flex}
+.toast button{background:#fff;color:#111;border:0;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;white-space:nowrap}
+@media(min-width:801px){.fab.on{display:none}}
 @media(max-width:800px){
   header{padding:14px 18px;gap:16px}section{padding:28px 18px}
   .grid{grid-template-columns:repeat(2,1fr);gap:12px}
   .badges{grid-template-columns:1fr}.hero{padding:60px 20px}
+  .cartlink{display:none}
 }
 </style></head><body>
 <header id="top">
   <a class="logo" href="#top">Lumia Bijoux</a>
   <nav><a href="#top">Accueil</a><a href="#produits">Catalogue</a><a href="#contact">Contact</a></nav>
+  <a class="cartlink" id="cartlink" href="#" onclick="openCart();return false">Panier</a>
 </header>
 <div class="hero">
   <h1>Decouvre nos bracelets en acier inoxydable</h1>
@@ -85,39 +107,130 @@ input,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10
   <span>&copy; 2026 Lumia Bijoux</span>
   <span>Instagram &nbsp;|&nbsp; TikTok &nbsp;|&nbsp; WhatsApp</span>
 </footer>
-<div class="modal" id="m"><div class="sheet" id="sheet"></div></div>
+<button class="fab" id="fab" onclick="openCart()">Panier</button>
+<div class="toast" id="toast"></div>
+<div class="modal" id="m" onclick="if(event.target===this)closeM()"><div class="sheet" id="sheet"></div></div>
 <script>
-var C=null,cur=null;
+var C=null,cur=null,CART=[],tt=null,gi=0,gx=0;
+var X='<button class="xb" aria-label="Fermer" onclick="closeM()">&times;</button>';
 function $(i){return document.getElementById(i)}
 function fmt(n){return n.toLocaleString('fr-FR')+' DA'}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* ---------- Panier ---------- */
+function loadCart(){
+  try{var s=localStorage.getItem('lumia_cart');CART=s?JSON.parse(s):[]}catch(e){CART=[]}
+  if(!Array.isArray(CART))CART=[];
+}
+function saveCart(){try{localStorage.setItem('lumia_cart',JSON.stringify(CART))}catch(e){}}
+function cnt(){return CART.reduce(function(s,l){return s+l.q},0)}
+function prod(id){return C?C.products.filter(function(x){return x.id===id})[0]:null}
+function updCart(){
+  var n=cnt();
+  $('cartlink').textContent='Panier'+(n?' ('+n+')':'');
+  var f=$('fab');f.textContent='Panier \u00b7 '+n;
+  if(n)f.classList.add('on');else f.classList.remove('on');
+}
+function toast(t){
+  var e=$('toast');
+  e.innerHTML='<span>'+esc(t)+'</span><button onclick="openCart()">Voir le panier</button>';
+  e.classList.add('on');
+  clearTimeout(tt);tt=setTimeout(function(){e.classList.remove('on')},4500);
+}
+function addCart(){
+  var q=+$('f_q').value,l=CART.filter(function(x){return x.id===cur.id})[0],note='';
+  if(l){
+    if(l.q+q>5){l.q=5;note=' (maximum 5 par bracelet)'}else l.q+=q;
+  }else{
+    if(CART.length>=10){$('pe').textContent='Ton panier est plein (10 bracelets differents maximum).';return}
+    CART.push({id:cur.id,q:q});
+  }
+  saveCart();updCart();closeM();
+  toast('Ajoute au panier'+note);
+}
+function openCart(){
+  if(!C)return;
+  $('toast').classList.remove('on');
+  if(!CART.length){
+    $('sheet').innerHTML='<div class="row"><b>Mon panier</b>'+X+'</div><div class="ok"><p class="mut">Ton panier est vide.</p><button class="btn" onclick="closeM()">Voir les bracelets</button></div>';
+    $('m').classList.add('on');return;
+  }
+  $('sheet').innerHTML='<div class="row"><b>Mon panier</b>'+X+'</div><div id="lines"></div>'
+  +'<label>Nom complet</label><input id="f_n" autocomplete="name">'
+  +'<label>Telephone</label><input id="f_t" type="tel" autocomplete="tel" placeholder="05 / 06 / 07 ...">'
+  +'<label>Wilaya</label><select id="f_w" onchange="calc()"><option value="">Choisir...</option>'+C.wilayas.map(function(w){return '<option>'+esc(w.n)+'</option>'}).join('')+'</select>'
+  +'<label>Adresse</label><input id="f_a" placeholder="Commune, rue, numero">'
+  +'<div class="sum" id="sum"></div><div class="er" id="er"></div>'
+  +'<button class="btn" id="go" style="width:100%;margin-top:6px" onclick="send()">Confirmer la commande</button>'
+  +'<p class="mut" style="font-size:12px;text-align:center">Paiement en especes a la reception.</p>';
+  drawLines();calc();$('m').classList.add('on');
+}
+function drawLines(){
+  $('lines').innerHTML=CART.map(function(l){
+    var p=prod(l.id);if(!p)return '';
+    return '<div class="line"><div class="th">'+(p.img?'<img src="'+esc(p.img)+'" alt="">':'<div class="ring" style="border-color:'+esc(p.color)+'"></div>')+'</div>'
+      +'<div class="li"><b>'+esc(p.name)+'</b>'+fmt(p.price*l.q)+'<br><button class="rm" onclick="rm('+Number(l.id)+')">Retirer</button></div>'
+      +'<div class="qty"><button aria-label="Moins" onclick="chg('+Number(l.id)+',-1)">&minus;</button><span>'+l.q+'</span><button aria-label="Plus" onclick="chg('+Number(l.id)+',1)">+</button></div></div>';
+  }).join('');
+}
+function chg(id,d){
+  var l=CART.filter(function(x){return x.id===id})[0];if(!l)return;
+  l.q=Math.max(1,Math.min(5,l.q+d));
+  saveCart();updCart();drawLines();calc();
+}
+function rm(id){
+  CART=CART.filter(function(x){return x.id!==id});
+  saveCart();updCart();
+  if(!CART.length){openCart();return}
+  drawLines();calc();
+}
+function ship(){var w=C.wilayas.filter(function(x){return x.n===$('f_w').value})[0];return w?w.s:null}
+function calc(){
+  var sub=CART.reduce(function(s,l){var p=prod(l.id);return s+(p?p.price*l.q:0)},0),s=ship();
+  $('sum').innerHTML='<div><span>Sous-total</span><span>'+fmt(sub)+'</span></div><div><span>Livraison</span><span>'+(s===null?'choisir wilaya':fmt(s))+'</span></div><div class="t"><span>Total a payer</span><span>'+(s===null?fmt(sub):fmt(sub+s))+'</span></div>';
+}
+function send(){
+  var er=$('er'),b=$('go');er.textContent='';
+  var body={name:$('f_n').value,phone:$('f_t').value,wilaya:$('f_w').value,address:$('f_a').value,items:CART.map(function(l){return{productId:l.id,qty:l.q}})};
+  if(!body.name.trim()||!body.phone.trim()||!body.wilaya||!body.address.trim()){er.textContent='Remplis ton nom, ton telephone, ta wilaya et ton adresse.';return}
+  b.disabled=true;b.textContent='Envoi...';
+  fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
+  .then(function(x){
+    if(!x.ok){er.textContent=x.d.error||'Erreur';b.disabled=false;b.textContent='Confirmer la commande';return}
+    CART=[];saveCart();updCart();
+    $('sheet').innerHTML='<div class="row"><b>Commande</b>'+X+'</div><div class="ok"><div style="font-size:48px">&#9989;</div><h2>Commande recue !</h2><p class="mut">Nous t\'appelons bientot pour confirmer.<br>Total a payer a la livraison : <b>'+fmt(x.d.total)+'</b></p><button class="btn" onclick="closeM()">Fermer</button></div>';
+  }).catch(function(){er.textContent='Connexion impossible, reessaie.';b.disabled=false;b.textContent='Confirmer la commande'});
+}
+
+/* ---------- Catalogue ---------- */
 function pic(x){
   if(!x.img)return '<div class="ring" style="border-color:'+esc(x.color)+'"></div>';
   return '<img src="'+esc(x.img)+'" alt="'+esc(x.name)+'" loading="lazy">'
     +(x.imgs&&x.imgs[1]?'<img class="alt" src="'+esc(x.imgs[1])+'" alt="" loading="lazy">':'');
 }
+loadCart();updCart();
 fetch('/api/config').then(function(r){return r.json()}).then(function(c){
   C=c;
+  CART=CART.filter(function(l){return prod(l.id)}).map(function(l){return{id:l.id,q:Math.max(1,Math.min(5,Number(l.q)||1))}});
+  saveCart();updCart();
   if(!c.products.length){$('grid').innerHTML='<p class="mut">Les produits arrivent bientot.</p>';return}
   $('grid').innerHTML=c.products.map(function(x){return '<div class="item" onclick="openF('+Number(x.id)+')"><div class="pic">'+pic(x)+'</div><h3>'+esc(x.name)+'</h3><div class="price">'+fmt(x.price)+'</div><div class="d">'+esc(x.desc)+'</div></div>'}).join('');
 }).catch(function(){$('grid').innerHTML='<p class="mut">Chargement impossible, reessaie dans un instant.</p>'});
+
 function openF(id){
-  cur=C.products.filter(function(x){return x.id===id})[0];
+  cur=prod(id);
   if(!cur)return;
-  $('sheet').innerHTML='<div class="row"><b>'+esc(cur.name)+'</b><button style="background:none;border:0;font-size:24px;cursor:pointer" onclick="closeM()">x</button></div>'
-   +gal(cur)
+  $('sheet').innerHTML='<div class="row"><b>'+esc(cur.name)+'</b>'+X+'</div>'
+  +gal(cur)
   +(cur.desc?'<p class="mut" style="margin:8px 0 0">'+esc(cur.desc)+'</p>':'')
-  +'<label>Nom complet</label><input id="f_n">'
-  +'<label>Telephone</label><input id="f_t" type="tel" placeholder="05 / 06 / 07 ...">'
-  +'<label>Wilaya</label><select id="f_w" onchange="calc()"><option value="">Choisir...</option>'+C.wilayas.map(function(w){return '<option>'+esc(w.n)+'</option>'}).join('')+'</select>'
-  +'<label>Adresse</label><input id="f_a" placeholder="Commune, rue, numero">'
-  +'<label>Quantite</label><select id="f_q" onchange="calc()"><option>1</option><option>2</option><option>3</option></select>'
-  +'<div class="sum" id="sum"></div>'
-  +'<button class="btn" id="go" style="width:100%;margin-top:14px" onclick="send()">Confirmer la commande</button>'
+  +'<div class="pp">'+fmt(cur.price)+'</div>'
+  +'<label>Quantite</label><select id="f_q"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>'
+  +'<div class="er" id="pe"></div>'
+  +'<button class="btn" style="width:100%;margin-top:6px" onclick="addCart()">Ajouter au panier</button>'
   +'<p class="mut" style="font-size:12px;text-align:center">Paiement en especes a la reception.</p>';
-  calc();$('m').classList.add('on');
+  $('m').classList.add('on');
 }
-var gi=0,gx=0;
 function gal(x){
   var im=(x.imgs&&x.imgs.length)?x.imgs:(x.img?[x.img]:[]);
   if(!im.length)return '';
@@ -147,18 +260,5 @@ document.addEventListener('keydown',function(e){
   if(e.key==='ArrowRight')stepImg(1);
   if(e.key==='ArrowLeft')stepImg(-1);
 });
-function ship(){var w=C.wilayas.filter(function(x){return x.n===$('f_w').value})[0];return w?w.s:null}
-function calc(){var q=+$('f_q').value,s=ship(),sub=cur.price*q;
-  $('sum').innerHTML='<div><span>Sous-total</span><span>'+fmt(sub)+'</span></div><div><span>Livraison</span><span>'+(s===null?'choisir wilaya':fmt(s))+'</span></div><div class="t"><span>Total a payer</span><span>'+(s===null?fmt(sub):fmt(sub+s))+'</span></div>'}
-function send(){
-  var b=$('go');b.disabled=true;b.textContent='Envoi...';
-  var body={name:$('f_n').value,phone:$('f_t').value,wilaya:$('f_w').value,address:$('f_a').value,items:[{productId:cur.id,qty:+$('f_q').value}]};
-  fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
-  .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
-  .then(function(x){
-    if(!x.ok){alert(x.d.error||'Erreur');b.disabled=false;b.textContent='Confirmer la commande';return}
-    $('sheet').innerHTML='<div class="ok"><div style="font-size:48px">&#9989;</div><h2>Commande recue !</h2><p class="mut">Nous t\'appelons bientot pour confirmer.<br>Total a payer a la livraison : <b>'+fmt(x.d.total)+'</b></p><button class="btn" onclick="closeM()">Fermer</button></div>';
-  }).catch(function(){alert('Connexion impossible, reessaie.');b.disabled=false;b.textContent='Confirmer la commande'});
-}
 function closeM(){$('m').classList.remove('on')}
-</script></body></html>
+</script></body></html> 
