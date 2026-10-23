@@ -77,6 +77,43 @@ init().catch((e) => console.error('Erreur base:', e.message));
 const IMGS_SQL = `COALESCE((SELECT json_agg(i.id ORDER BY i.sort, i.id) FROM product_images i WHERE i.product_id = p.id), '[]'::json)`;
 const imgUrl = (id) => '/api/images/' + id;
 
+// Notifications de nouvelle commande : email (Resend) et/ou Telegram.
+// Chaque canal est facultatif : il ne fait rien si ses variables ne sont pas definies.
+async function notify(text, subject) {
+  const key = process.env.RESEND_API_KEY;
+  const to = process.env.NOTIFY_EMAIL;
+  if (key && to) {
+    try {
+      const r = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'Lumia Bijoux <onboarding@resend.dev>',
+          to: [to],
+          subject: subject || 'Nouvelle commande',
+          text,
+        }),
+      });
+      if (!r.ok) console.error('Email:', r.status, await r.text());
+    } catch (e) {
+      console.error('Email:', e.message);
+    }
+  }
+  const t = process.env.TELEGRAM_TOKEN;
+  const c = process.env.TELEGRAM_CHAT_ID;
+  if (t && c) {
+    try {
+      await fetch('https://api.telegram.org/bot' + t + '/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: c, text }),
+      });
+    } catch (e) {
+      console.error('Telegram:', e.message);
+    }
+  }
+}
+
 // ---------- Cote client ----------
 app.get('/api/config', async (req, res) => {
   try {
@@ -138,6 +175,11 @@ app.post('/api/orders', async (req, res) => {
     const r = await pool.query(
       'INSERT INTO orders(name,phone,wilaya,address,product,qty,total) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id',
       [n, ph, wilaya, a, parts.join(', ').slice(0, 500), qtyTotal, total]
+    );
+    notify(
+      'Nouvelle commande #' + r.rows[0].id + '\n' + n + ' - ' + ph + '\n' + wilaya + ', ' + a + '\n' +
+        parts.join(', ') + '\nTotal : ' + total + ' DA',
+      'Nouvelle commande #' + r.rows[0].id + ' - ' + total + ' DA'
     );
     res.json({ id: r.rows[0].id, total });
   } catch (e) {
