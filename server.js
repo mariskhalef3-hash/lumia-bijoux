@@ -70,6 +70,13 @@ async function init() {
     WHERE p.image IS NOT NULL
       AND NOT EXISTS (SELECT 1 FROM product_images i WHERE i.product_id = p.id)`);
   await pool.query('UPDATE products SET image = NULL WHERE image IS NOT NULL');
+  // Bannière d'accueil : plusieurs photos qui défilent
+  await pool.query(`CREATE TABLE IF NOT EXISTS hero_images (
+    id SERIAL PRIMARY KEY,
+    image BYTEA NOT NULL,
+    sort INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`);
   console.log('Base prete');
 }
 init().catch((e) => console.error('Erreur base:', e.message));
@@ -121,7 +128,9 @@ app.get('/api/config', async (req, res) => {
       `SELECT p.id, p.name, p.description, p.price, p.color, ${IMGS_SQL} AS imgs
        FROM products p WHERE p.active ORDER BY p.sort, p.id`
     );
+    const hr = await pool.query('SELECT id FROM hero_images ORDER BY sort, id');
     res.json({
+      hero: hr.rows.map((x) => '/api/hero/' + x.id),
       products: r.rows.map((x) => {
         const imgs = (x.imgs || []).map(imgUrl);
         return { id: x.id, name: x.name, desc: x.description, price: x.price, color: x.color, img: imgs[0] || null, imgs };
@@ -138,6 +147,16 @@ app.get('/api/images/:id', async (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id)) return res.sendStatus(404);
   const r = await pool.query('SELECT image FROM product_images WHERE id=$1', [id]);
+  if (!r.rows[0]) return res.sendStatus(404);
+  res.set('Content-Type', 'image/jpeg');
+  res.set('Cache-Control', 'public, max-age=31536000, immutable');
+  res.send(r.rows[0].image);
+});
+
+app.get('/api/hero/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.sendStatus(404);
+  const r = await pool.query('SELECT image FROM hero_images WHERE id=$1', [id]);
   if (!r.rows[0]) return res.sendStatus(404);
   res.set('Content-Type', 'image/jpeg');
   res.set('Cache-Control', 'public, max-age=31536000, immutable');
@@ -292,6 +311,36 @@ app.patch('/api/admin/images/:id', admin, async (req, res) => {
        SELECT COALESCE(MIN(sort),0) - 1 FROM product_images
        WHERE product_id = (SELECT product_id FROM product_images WHERE id = $1)
      ) WHERE id = $1`,
+    [Number(req.params.id)]
+  );
+  res.json({ ok: true });
+});
+
+// Bannière d'accueil (photos qui défilent) : gérée depuis l'admin
+const MAX_HERO = 6;
+app.get('/api/admin/hero', admin, async (req, res) => {
+  const r = await pool.query('SELECT id FROM hero_images ORDER BY sort, id');
+  res.json(r.rows.map((x) => ({ id: x.id, url: '/api/hero/' + x.id })));
+});
+app.post('/api/admin/hero', admin, express.raw({ type: 'image/jpeg', limit: '4mb' }), async (req, res) => {
+  const buf = req.body;
+  if (!Buffer.isBuffer(buf) || buf.length < 100 || buf[0] !== 0xff || buf[1] !== 0xd8)
+    return res.status(400).json({ error: 'Image invalide (JPEG attendu)' });
+  const c = await pool.query('SELECT count(*)::int AS n FROM hero_images');
+  if (c.rows[0].n >= MAX_HERO) return res.status(400).json({ error: MAX_HERO + ' photos maximum pour la banniere' });
+  const r = await pool.query(
+    'INSERT INTO hero_images(image,sort) VALUES($1,(SELECT COALESCE(MAX(sort),0)+1 FROM hero_images)) RETURNING id',
+    [buf]
+  );
+  res.json({ id: r.rows[0].id });
+});
+app.delete('/api/admin/hero/:id', admin, async (req, res) => {
+  await pool.query('DELETE FROM hero_images WHERE id=$1', [Number(req.params.id)]);
+  res.json({ ok: true });
+});
+app.patch('/api/admin/hero/:id', admin, async (req, res) => {
+  await pool.query(
+    'UPDATE hero_images SET sort = (SELECT COALESCE(MIN(sort),0) - 1 FROM hero_images) WHERE id = $1',
     [Number(req.params.id)]
   );
   res.json({ ok: true });

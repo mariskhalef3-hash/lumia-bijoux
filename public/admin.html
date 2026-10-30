@@ -92,6 +92,7 @@ label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
 .mini{min-height:32px;padding:0 8px;font-size:12px;border-radius:8px;width:100%}
 .pc .row-acts{margin-top:12px}
 .pc .row-acts .primary{flex:1 1 140px}
+.hph{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:1px solid var(--bd);display:block;margin-bottom:10px}
 .msg{min-height:18px;margin:8px 0 0;color:var(--mut)}
 .msg.bad{color:var(--bad)}
 </style></head><body>
@@ -116,6 +117,7 @@ label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
     <nav class="nav">
       <button id="nav-o" aria-pressed="true">Commandes</button>
       <button id="nav-p" aria-pressed="false">Produits</button>
+      <button id="nav-h" aria-pressed="false">Bannière</button>
     </nav>
 
     <section id="vo">
@@ -141,11 +143,22 @@ label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
       </div>
       <div id="plist"></div>
     </section>
+
+    <section id="vh" hidden>
+      <div class="card add">
+        <b>Photos du bandeau d'accueil</b>
+        <p class="mut small" style="margin:6px 0 0">Ces photos défilent en haut de ta boutique, une par une. Choisis de belles photos <b>larges (en paysage)</b> de tes bracelets. 6 photos maximum.</p>
+        <div class="err" id="h-m" aria-live="polite"></div>
+        <button class="primary" id="h-add">Ajouter des photos</button>
+      </div>
+      <div id="hlist"></div>
+    </section>
   </main>
 </div>
 <input type="file" id="pick" accept="image/*" multiple hidden>
+<input type="file" id="hpick" accept="image/*" multiple hidden>
 <script>
-var PW='',ROWS=[],PROD=[],FILTER='all',TIMER=null,VIEW='o',PICK=0;
+var PW='',ROWS=[],PROD=[],HERO=[],FILTER='all',TIMER=null,VIEW='o',PICK=0;
 var LABEL={nouvelle:'Nouvelle',confirmee:'Confirmée',expediee:'Expédiée',livree:'Livrée',annulee:'Annulée'};
 var NEXT={nouvelle:['confirmee','Confirmer la commande'],confirmee:['expediee','Marquer comme expédiée'],expediee:['livree','Marquer comme livrée']};
 var TABS=[['all','Toutes'],['nouvelle','Nouvelles'],['confirmee','Confirmées'],['expediee','Expédiées'],['livree','Livrées'],['annulee','Annulées']];
@@ -186,18 +199,20 @@ function login(){
   });
 }
 function logout(){
-  PW='';ROWS=[];PROD=[];FILTER='all';
+  PW='';ROWS=[];PROD=[];HERO=[];FILTER='all';
   if(TIMER){clearInterval(TIMER);TIMER=null}
   $('app').hidden=true;$('acts').hidden=true;$('login').hidden=false;
-  $('list').innerHTML='';$('plist').innerHTML='';
+  $('list').innerHTML='';$('plist').innerHTML='';$('hlist').innerHTML='';
   setView('o');
 }
 function setView(v){
   VIEW=v;
-  $('vo').hidden=(v!=='o');$('vp').hidden=(v!=='p');
+  $('vo').hidden=(v!=='o');$('vp').hidden=(v!=='p');$('vh').hidden=(v!=='h');
   $('nav-o').setAttribute('aria-pressed',v==='o');
   $('nav-p').setAttribute('aria-pressed',v==='p');
+  $('nav-h').setAttribute('aria-pressed',v==='h');
   if(v==='p'&&PW)loadProducts();
+  if(v==='h'&&PW)loadHero();
 }
 function refresh(){
   return fetchOrders().then(function(res){
@@ -414,15 +429,72 @@ $('np-go').onclick=function(){
     .then(function(){b.disabled=false;b.textContent='Ajouter le produit'});
 };
 
+/* ---------- Bannière d'accueil ---------- */
+function loadHero(){
+  return api('/api/admin/hero').then(function(r){
+    if(r.status===401){logout();throw 0}
+    if(!r.ok)throw 0;
+    return r.json();
+  }).then(function(rows){HERO=rows;renderHero()})
+  .catch(function(){if(PW)$('hlist').innerHTML='<p class="empty">Impossible de charger les photos. Réessaie.</p>'});
+}
+function renderHero(){
+  if(!HERO.length){$('hlist').innerHTML='<p class="empty">Aucune photo pour l\'instant. Le bandeau garde son fond de couleur.</p>';return}
+  $('hlist').innerHTML=HERO.map(function(x,k){
+    var id=Number(x.id);
+    return '<article class="card pc"><img class="hph" src="'+esc(x.url)+'" alt="">'+
+      '<div class="row-acts">'+
+      (k===0?'<span class="small" style="align-self:center;flex:1;color:var(--ac);font-weight:700">Affichée en premier</span>':'<button onclick="heroFirst('+id+')">Mettre en premier</button>')+
+      '<button class="ghost danger" onclick="heroDel('+id+')">Retirer</button></div></article>';
+  }).join('');
+}
+function heroFirst(id){
+  api('/api/admin/hero/'+id,{method:'PATCH'})
+    .then(function(r){if(!r.ok)throw 0;return loadHero()})
+    .catch(function(){alert('Le changement a échoué. Réessaie.')});
+}
+function heroDel(id){
+  if(!confirm('Retirer cette photo du bandeau ?'))return;
+  api('/api/admin/hero/'+id,{method:'DELETE'})
+    .then(function(r){if(!r.ok)throw 0;return loadHero()})
+    .catch(function(){alert('Le changement a échoué. Réessaie.')});
+}
+function uploadHero(file){
+  return resize(file,1800).then(function(blob){
+    return api('/api/admin/hero',{method:'POST',headers:{'Content-Type':'image/jpeg'},body:blob});
+  }).then(function(r){
+    if(r.ok)return;
+    return r.json().catch(function(){return{}}).then(function(d){throw{msg:d.error||'Erreur'}});
+  });
+}
+$('h-add').onclick=function(){$('hpick').value='';$('hpick').click()};
+$('hpick').onchange=function(){
+  var files=Array.prototype.slice.call(this.files),m=$('h-m'),b=$('h-add');
+  if(!files.length)return;
+  m.textContent='';b.disabled=true;
+  var i=0,fail=0,msg='';
+  function next(){
+    if(i>=files.length)return Promise.resolve();
+    b.textContent='Envoi de la photo '+(i+1)+' sur '+files.length+'...';
+    var f=files[i++];
+    return uploadHero(f).catch(function(e){fail++;if(e&&e.msg)msg=e.msg}).then(next);
+  }
+  next().then(function(){return loadHero()}).then(function(){
+    b.disabled=false;b.textContent='Ajouter des photos';
+    m.textContent=fail?(fail+' photo(s) non envoyée(s). '+(msg||'Essaie une autre image.')):'';
+  });
+};
+
 /* ---------- Boutons du haut ---------- */
 $('enter').onclick=login;
 $('pw').onkeydown=function(e){if(e.key==='Enter')login()};
 $('out').onclick=logout;
 $('nav-o').onclick=function(){setView('o')};
 $('nav-p').onclick=function(){setView('p')};
+$('nav-h').onclick=function(){setView('h')};
 $('q').oninput=render;
 $('refresh').onclick=function(){
   var b=this;b.disabled=true;b.textContent='Actualisation...';
-  (VIEW==='p'?loadProducts():refresh()).then(function(){b.disabled=false;b.textContent='Actualiser'});
+  (VIEW==='p'?loadProducts():VIEW==='h'?loadHero():refresh()).then(function(){b.disabled=false;b.textContent='Actualiser'});
 };
 </script></body></html>
