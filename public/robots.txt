@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lumia-bijoux.onrender.com/sitemap.xml
