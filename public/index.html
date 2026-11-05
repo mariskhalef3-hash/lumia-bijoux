@@ -1,183 +1,199 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
+<html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="google-site-verification" content="WfR8T8dxKWCjTgkX8672sLyl9IIxoEDq-AJIv4Mbjh4">
-
 <title>Lumia Bijoux | Bracelets en acier inoxydable, paiement à la livraison</title>
-
-<meta name="description" content="Bracelets en acier inoxydable. Livraison dans les 58 wilayas, paiement à la livraison."><link rel="canonical" href="https://lumia-bijoux.onrender.com/">
-<meta name="theme-color" content="#0d2240">
+<meta name="description" content="Bracelets en acier inoxydable. Livraison dans les 58 wilayas, paiement à la livraison.">
+<meta name="google-site-verification" content="WfR8T8dxKWCjTgkX8672sLyl9IIxoEDq-AJIv4Mbjh4">
+<link rel="canonical" href="https://lumia-bijoux.onrender.com/">
+<meta name="theme-color" content="#2a2823">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Lumia Bijoux | Bracelets en acier inoxydable">
 <meta property="og:description" content="Bracelets en acier inoxydable. Livraison dans les 58 wilayas, paiement à la livraison.">
 <meta property="og:url" content="https://lumia-bijoux.onrender.com/">
-
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='19' fill='%230d2240'/%3E%3Cpath d='M15 10v18h11' fill='none' stroke='%23c9a45c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='19' fill='%232a2823'/%3E%3Cpath d='M15 10v18h11' fill='none' stroke='%23c9a45c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-<style> :root{--tx:#0f1b2d;--mut:#5f6b7a;--bd:#dfe4ea;--gr:#f3f5f8;--pic:#e6eaf0;--ac:#b08d47;--gold:#c9a45c;--navy:#0d2240;--serif:"Cormorant Garamond","Playfair Display",Georgia,"Times New Roman",serif}
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf8f4;--ink:#2a2823;--mut:#6f695d;--line:#e6e0d6;--beige:#ece6dd;--pic:#efe9df;--acc:#8a7048;--gold:#b8995e;
+  --serif:"Playfair Display",Georgia,"Times New Roman",serif;--logo:"Cormorant Garamond",Georgia,"Times New Roman",serif;--r:2px}
 *{box-sizing:border-box}
-body{margin:0;background:#fff;color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
 a{color:inherit;text-decoration:none}
 
+/* Bandeau d'annonce */
+.ann{background:var(--ink);color:#fff;text-align:center;font-size:12.5px;font-weight:500;letter-spacing:.04em;padding:10px 16px}
 
-/* En-tête : menu à gauche, logo au centre, panier à droite */
-header{position:sticky;top:0;z-index:7;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px 32px;background:#fff;border-bottom:1px solid var(--bd)}
-nav{display:flex;gap:24px;font-size:14px}
-nav a:hover{color:var(--ac)}
-.logo{display:flex;align-items:center;gap:12px;color:var(--navy)}
+/* En-tête : liens à gauche, logo au centre, panier à droite, puis rangée de liens */
+header{position:sticky;top:0;z-index:7;background:var(--bg)}
+.hrow{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px 32px}
+.hrow nav{display:flex;gap:26px;font-size:13px;font-weight:500}
+.hrow nav a:hover,.cats a:hover{color:var(--acc)}
+.logo{display:flex;align-items:center;gap:12px;color:var(--ink)}
 .mark{width:42px;height:44px;flex:none}
 .wm{display:flex;flex-direction:column;align-items:center;line-height:1}
-.wm b{font-family:var(--serif);font-weight:600;font-size:27px;letter-spacing:.3em;margin-right:-.3em;color:var(--navy)}
+.wm b{font-family:var(--logo);font-weight:600;font-size:27px;letter-spacing:.3em;margin-right:-.3em;color:var(--ink)}
 .wm small{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:9px;font-weight:500;letter-spacing:.55em;margin-right:-.55em;color:var(--gold)}
 .wm small::before,.wm small::after{content:"";width:16px;height:1px;background:var(--gold)}
-.emb{display:block;margin:0 auto 18px;width:64px;height:68px;color:var(--gold)}
 .hr{display:flex;justify-content:flex-end}
-.bag{position:relative;background:none;border:0;padding:6px;cursor:pointer;color:var(--tx);display:flex}
+.bag{position:relative;background:none;border:0;padding:6px;cursor:pointer;color:var(--ink);display:flex}
 .bag svg{width:24px;height:24px}
-.cc{position:absolute;top:-2px;right:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;display:none;align-items:center;justify-content:center}
+.cc{position:absolute;top:-2px;right:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--ink);color:#fff;font-size:11px;font-weight:600;display:none;align-items:center;justify-content:center}
+.cats{max-width:1236px;margin:0 auto;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;justify-content:center;gap:52px;padding:16px 0;font-size:13.5px;font-weight:500}
 
-/* Bandeau du haut : les photos viennent de l'admin (onglet Bannière) */
-.hero{position:relative;overflow:hidden;min-height:min(78vh,620px);display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;padding:60px 20px;
-  background:linear-gradient(160deg,#0a1a33 0%,#12294a 55%,#1d3f6e 100%)}
-.hero::before{content:"";position:absolute;inset:0;z-index:1;background:rgba(8,20,40,.42)}
+/* Haut de page : photos à gauche, texte à droite */
+.hero{max-width:1300px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1.15fr 1fr}
+.hl{position:relative;min-height:560px;background:#e3dbcd;overflow:hidden}
+.hph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--gold)}
+.hph svg{width:110px;height:117px}
+.hl.has .hph{display:none}
 .slides{position:absolute;inset:0}
 .slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease}
 .slide.on{opacity:1}
-.hin{position:relative;z-index:2}
 .hctl{position:absolute;left:0;right:0;bottom:18px;height:34px;z-index:3;display:flex;align-items:center;justify-content:center}
-.hpause{position:absolute;left:20px;top:0;width:34px;height:34px;padding:0;border:1px solid rgba(255,255,255,.6);border-radius:50%;background:rgba(0,0,0,.25);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.hpause{position:absolute;left:20px;top:0;width:34px;height:34px;padding:0;border:1px solid rgba(255,255,255,.7);border-radius:50%;background:rgba(0,0,0,.28);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .hpause svg{width:14px;height:14px}
 .dots{display:flex;gap:8px}
-.dot{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;transition:width .2s}
+.dot{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.55);cursor:pointer;transition:width .2s}
 .dot.on{width:22px;border-radius:4px;background:#fff}
-.kick{margin:0 0 14px;font-size:14px;letter-spacing:.04em;opacity:.95;text-shadow:0 2px 12px rgba(0,0,0,.35)}
-.hero h1{margin:0 0 24px;text-shadow:0 2px 14px rgba(0,0,0,.35);font-family:var(--serif);font-weight:400;font-size:clamp(34px,6.5vw,60px);line-height:1.08}
-.hero a{display:inline-block;padding-bottom:3px;border-bottom:1px solid #fff;font-size:15px;font-weight:500}
-.hero a:hover{opacity:.8}
+.hr2{background:var(--beige);display:flex;flex-direction:column;justify-content:center;padding:64px 56px}
+.kick{margin:0 0 26px;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--acc)}
+.hr2 h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(40px,5vw,72px);line-height:1.02;letter-spacing:-.01em}
+.hr2 h1 em{display:block;font-style:italic;color:var(--acc)}
+.lead{margin:28px 0 34px;max-width:400px;font-size:15px;line-height:1.7;color:var(--mut)}
+.cta{align-self:flex-start;display:inline-flex;align-items:center;gap:40px;background:var(--ink);color:#fff;padding:20px 24px;font-size:13px;font-weight:600;letter-spacing:.02em;border-radius:var(--r)}
+.cta:hover{background:#000}
 
 section{padding:40px 32px;max-width:1300px;margin:auto}
-.band{background:var(--gr)}
-.band section{padding:56px 32px}
-h2{margin:0 0 30px;text-align:center;font-family:var(--serif);font-weight:400;font-size:32px;letter-spacing:.02em}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.shop{padding:72px 32px 56px}
+h2{margin:0 0 36px;text-align:center;font-family:var(--serif);font-weight:400;font-size:34px;letter-spacing:-.005em}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 22px}
 .item{cursor:pointer}
-.pic{aspect-ratio:1;background:var(--pic);display:flex;align-items:center;justify-content:center;transition:filter .2s;overflow:hidden;border-radius:12px;position:relative}
-.pic img{width:100%;height:100%;object-fit:cover;display:block}
-.pic .alt{position:absolute;inset:0;opacity:0;transition:opacity .25s}
+.pic{aspect-ratio:1;background:var(--pic);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.item:hover .pic img{transform:scale(1.03)}
+.pic .alt{position:absolute;inset:0;opacity:0;transition:opacity .3s,transform .5s}
 .item:hover .pic .alt{opacity:1}
-.item:hover .pic{filter:brightness(.95)}
-.ring{width:46%;aspect-ratio:1;border-radius:50%;border:14px solid;box-shadow:0 8px 16px rgba(0,0,0,.18)}
-.item h3{margin:12px 0 4px;font-size:15px;font-weight:500}
-.item .price{font-size:14px;font-weight:600}
-.item .d{font-size:13px;color:var(--mut);margin-top:2px}
-.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-top:10px}
-.badges div{padding:24px 20px;background:#fff;border:1px solid var(--bd);text-align:center;font-size:14px;color:var(--mut)}
-.badges b{display:block;color:var(--tx);font-size:16px;margin-bottom:6px}
-.fl{display:flex;align-items:center;gap:10px} .soc{display:flex;gap:20px}
-.soc a:hover{color:#fff}
+.ring{width:46%;aspect-ratio:1;border-radius:50%;border:14px solid;box-shadow:0 8px 16px rgba(0,0,0,.14)}
+.item h3{margin:14px 0 4px;font-family:var(--serif);font-size:17px;font-weight:400}
+.item .price{font-size:14px;font-weight:500;color:var(--acc)}
+.item .d{font-size:13px;color:var(--mut);margin-top:3px}
+.infos{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;border-top:1px solid var(--line);padding-top:44px;text-align:center}
+.infos b{display:block;font-family:var(--serif);font-weight:400;font-size:19px;margin-bottom:8px}
+.infos span{font-size:14px;line-height:1.6;color:var(--mut)}
+.fl{display:flex;align-items:center;gap:10px}
 .fl .mark{width:28px;height:30px;color:#fff}
-footer{align-items:center;margin-top:20px;padding:30px 32px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;background:var(--navy);color:#c8d2e0}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:9;padding:10px}.modal.on{display:flex}
-.sheet{background:#fff;width:100%;max-width:460px;max-height:95%;overflow:auto;border-radius:16px;padding:20px}
-.xb{background:none;border:0;font-size:24px;cursor:pointer;line-height:1}
+footer{margin-top:40px;padding:34px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:13px;background:var(--ink);color:#cfc9bd}
+.soc{display:flex;gap:22px}
+.soc a:hover{color:#fff}
+
+/* Fenêtres (produit et panier) */
+.modal{position:fixed;inset:0;background:rgba(20,18,14,.55);display:none;align-items:center;justify-content:center;z-index:9;padding:10px}.modal.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:460px;max-height:95%;overflow:auto;border-radius:4px;padding:22px}
+.xb{background:none;border:0;font-size:24px;cursor:pointer;line-height:1;color:var(--ink)}
 .car{position:relative;margin:12px 0 8px;touch-action:pan-y}
-.mimg{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}
-.car button{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.88);color:#111;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.mimg{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.car button{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.9);color:#111;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 .car .prev{left:8px}
 .car .next{right:8px}
 .car .cnt{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;padding:3px 9px;border-radius:999px}
 .thumbs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px}
-.thumbs img{flex:none;width:56px;height:56px;object-fit:cover;border-radius:8px;border:2px solid transparent;opacity:.65;cursor:pointer}
-.thumbs img.on{border-color:var(--ac);opacity:1}
-.pp{font-size:20px;font-weight:700;margin:10px 0 0}
+.thumbs img{flex:none;width:56px;height:56px;object-fit:cover;border:2px solid transparent;opacity:.65;cursor:pointer}
+.thumbs img.on{border-color:var(--acc);opacity:1}
+.pp{font-family:var(--serif);font-size:22px;color:var(--acc);margin:10px 0 0}
 .row{display:flex;justify-content:space-between;align-items:center}
-label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
-input,select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx);font-size:15px}
-.btn{background:var(--navy);color:#fff;border:0;padding:13px 16px;border-radius:12px;font-weight:600;cursor:pointer;font-size:15px}
+.row b{font-family:var(--serif);font-weight:400;font-size:20px}
+label{display:block;font-size:12px;letter-spacing:.04em;color:var(--mut);margin:12px 0 4px}
+input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:#fff;color:var(--ink);font-size:15px}
+.btn{background:var(--ink);color:#fff;border:0;padding:14px 18px;border-radius:var(--r);font-weight:600;cursor:pointer;font-size:14px;letter-spacing:.02em}
 .btn:disabled{opacity:.5}
-.sum{margin-top:14px;padding:12px;background:var(--gr);border-radius:10px;font-size:14px}
+.sum{margin-top:14px;padding:12px;background:var(--beige);border-radius:var(--r);font-size:14px}
 .sum div{display:flex;justify-content:space-between;padding:2px 0}
-.sum .t{font-weight:700;border-top:1px solid var(--bd);margin-top:6px;padding-top:8px}
+.sum .t{font-weight:700;border-top:1px solid #d9d0c1;margin-top:6px;padding-top:8px}
 .ok{text-align:center;padding:16px 0}.mut{color:var(--mut)}
-.er{color:#c0392b;font-size:13px;min-height:18px;margin:8px 0 0}
-.line{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}
-.line .th{flex:none;width:56px;height:56px;border-radius:10px;background:var(--pic);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.er{color:#b3382c;font-size:13px;min-height:18px;margin:8px 0 0}
+.line{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.line .th{flex:none;width:56px;height:56px;background:var(--pic);overflow:hidden;display:flex;align-items:center;justify-content:center}
 .line .th img{width:100%;height:100%;object-fit:cover}
 .line .th .ring{width:60%;border-width:6px;box-shadow:none}
 .line .li{flex:1;min-width:0;font-size:14px}
 .line .li b{display:block;font-weight:600}
 .qty{display:flex;align-items:center;gap:4px}
-.qty button{width:32px;height:32px;border:1px solid var(--bd);background:#fff;border-radius:8px;font-size:18px;cursor:pointer;line-height:1;padding:0}
+.qty button{width:32px;height:32px;border:1px solid var(--line);background:#fff;border-radius:var(--r);font-size:18px;cursor:pointer;line-height:1;padding:0}
 .qty span{min-width:20px;text-align:center;font-weight:600}
 .rm{background:none;border:0;color:var(--mut);font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 0}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:12;background:var(--navy);color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:none;align-items:center;gap:12px;font-size:14px;max-width:92%;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:12;background:var(--ink);color:#fff;border-radius:var(--r);padding:10px 12px 10px 16px;display:none;align-items:center;gap:12px;font-size:14px;max-width:92%;box-shadow:0 6px 20px rgba(0,0,0,.3)}
 .toast.on{display:flex}
-.toast button{background:#fff;color:var(--navy);border:0;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.toast button{background:#fff;color:var(--ink);border:0;border-radius:var(--r);padding:8px 12px;font-weight:600;cursor:pointer;white-space:nowrap}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding:0}
+  .hl{min-height:0;aspect-ratio:1/1}
+  .hr2{padding:40px 24px 44px}
+  .cats{display:none}
+}
 @media(max-width:800px){
-  header{padding:12px 16px}
-  nav{display:none}
-  header::before{content:""}
+  .hrow{padding:12px 16px}
+  .hrow nav{display:none}
+  .hrow::before{content:""}
   .logo{gap:8px}
   .mark{width:32px;height:34px}
   .wm b{font-size:19px}
   .wm small{font-size:8px;margin-top:4px}
   .wm small::before,.wm small::after{width:10px}
-  .emb{width:52px;height:55px}
+  .shop{padding:44px 18px 36px}
   section{padding:28px 18px}
-  .band section{padding:40px 18px}
-  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
-  .badges{grid-template-columns:1fr}
-  .hero{min-height:62vh}
+  .grid{grid-template-columns:repeat(2,1fr);gap:22px 12px}
+  .infos{grid-template-columns:1fr;gap:28px}
   h2{font-size:28px}
+  .cta{align-self:stretch;justify-content:space-between}
 }
 </style></head><body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="lg" viewBox="0 0 64 68"><circle cx="32" cy="36" r="26" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="32" cy="36" r="22.5" fill="none" stroke="currentColor" stroke-width=".7"/><text x="32" y="46" text-anchor="middle" font-size="30" font-weight="500" fill="currentColor" style="font-family:var(--serif)">L</text><path d="M32 1l6 5.5L32 14l-6-7.5z" style="fill:var(--gold)"/><path d="M26 6.5h12M32 1l-2.2 5.5L32 14l2.2-7.5z" fill="none" stroke="#fff" stroke-width=".5" stroke-opacity=".75"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="lg" viewBox="0 0 64 68"><circle cx="32" cy="36" r="26" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="32" cy="36" r="22.5" fill="none" stroke="currentColor" stroke-width=".7"/><text x="32" y="46" text-anchor="middle" font-size="30" font-weight="500" fill="currentColor" style="font-family:var(--logo)">L</text><path d="M32 1l6 5.5L32 14l-6-7.5z" style="fill:var(--gold)"/><path d="M26 6.5h12M32 1l-2.2 5.5L32 14l2.2-7.5z" fill="none" stroke="#fff" stroke-width=".5" stroke-opacity=".75"/></symbol></defs></svg>
+<div class="ann">Livraison dans les 58 wilayas · Paiement à la livraison</div>
 <header id="top">
-  <nav><a href="#top">Accueil</a><a href="#produits">Catalogue</a><a href="#contact">Contact</a></nav>
-  <a class="logo" href="#top" aria-label="Lumia Bijoux"><svg class="mark" aria-hidden="true"><use href="#lg"/></svg><span class="wm"><b>LUMIA</b><small>BIJOUX</small></span></a>
-  <div class="hr">
-    <button class="bag" id="cartlink" onclick="openCart()" aria-label="Panier">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 12H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-      <span class="cc" id="cc"></span>
-    </button>
+  <div class="hrow">
+    <nav><a href="#top">Accueil</a><a href="#contact">Contact</a></nav>
+    <a class="logo" href="#top" aria-label="Lumia Bijoux"><svg class="mark" aria-hidden="true"><use href="#lg"/></svg><span class="wm"><b>LUMIA</b><small>BIJOUX</small></span></a>
+    <div class="hr">
+      <button class="bag" id="cartlink" onclick="openCart()" aria-label="Panier">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 12H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <span class="cc" id="cc"></span>
+      </button>
+    </div>
   </div>
+  <nav class="cats"><a href="#produits">Tous les bracelets</a><a href="#infos">Livraison et paiement</a><a href="#contact">Contact</a></nav>
 </header>
-<div class="hero" ontouchstart="hS(event)" ontouchend="hE(event)">
-  <div class="slides" id="slides"></div>
-  <div class="hin">
-    <svg class="mark emb" aria-hidden="true"><use href="#lg"/></svg>
+<div class="hero">
+  <div class="hl" id="hl" ontouchstart="hS(event)" ontouchend="hE(event)">
+    <div class="hph"><svg aria-hidden="true"><use href="#lg"/></svg></div>
+    <div class="slides" id="slides"></div>
+    <div class="hctl" id="hctl" hidden>
+      <button class="hpause" id="hpause" aria-label="Pause" onclick="toggleHero()"></button>
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+  <div class="hr2">
     <p class="kick">Acier inoxydable · Livraison dans les 58 wilayas</p>
-    <h1>Découvre nos bracelets</h1>
-    <a href="#produits">Découvrir la collection</a>
-  </div>
-  <div class="hctl" id="hctl" hidden>
-    <button class="hpause" id="hpause" aria-label="Pause" onclick="toggleHero()"></button>
-    <div class="dots" id="dots"></div>
+    <h1>Découvre nos <em>bracelets.</em></h1>
+    <p class="lead">Des bracelets en acier inoxydable qui ne noircissent pas, à porter chaque jour.</p>
+    <a class="cta" href="#produits"><span>Découvrir la collection</span><span aria-hidden="true">&#8599;</span></a>
   </div>
 </div>
-<div class="band">
-  <section id="produits">
-    <h2>Nos bracelets</h2>
-    <div class="grid" id="grid"></div>
-  </section>
-</div>
-<section>
-  <div class="badges">
-    <div><b>Paiement à la livraison</b>Tu paies en espèces quand tu reçois ton colis.</div>
-    <div><b>Livraison 58 wilayas</b>Frais calculés automatiquement selon ta wilaya.</div>
-    <div><b>Acier inoxydable</b>Résiste à l'eau, ne noircit pas.</div>
+<section class="shop" id="produits">
+  <h2>La collection</h2>
+  <div class="grid" id="grid"></div>
+</section>
+<section id="infos">
+  <div class="infos">
+    <div><b>Paiement à la livraison</b><span>Tu paies en espèces quand tu reçois ton colis.</span></div>
+    <div><b>Livraison 58 wilayas</b><span>Frais calculés automatiquement selon ta wilaya.</span></div>
+    <div><b>Acier inoxydable</b><span>Résiste à l'eau, ne noircit pas.</span></div>
   </div>
 </section>
 <footer id="contact">
   <span class="fl"><svg class="mark" aria-hidden="true"><use href="#lg"/></svg><span>&copy; 2026 Lumia Bijoux</span></span>
-  <span class="soc"><a href="https://instagram.com/" thttps://www.instagram.com/lum_iabijoux/?__pwa=1#arget="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@TON_COMPTE" target="_blank" rel="noopener">TikTok</a><a href="https://wa.me/2130656364093?text=Bonjour%2C%20je%20souhaite%20des%20informations%20sur%20vos%20bracelets." target="_blank" rel="noopener">WhatsApp</a></span>
-</footer>
+  <span  class="soc"><a href="https://instagram.com/" thttps://www.instagram.com/lum_iabijoux/?__pwa=1#arget="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@TON_COMPTE" target="_blank" rel="noopener">TikTok</a><a href="https://wa.me/2130656364093?text=Bonjour%2C%20je%20souhaite%20des%20informations%20sur%20vos%20bracelets." target="_blank" rel="noopener">WhatsApp</a></span>
 <div class="toast" id="toast"></div>
 <div class="modal" id="m" onclick="if(event.target===this)closeM()"><div class="sheet" id="sheet"></div></div>
 <script>
@@ -268,19 +284,20 @@ function send(){
   .then(function(x){
     if(!x.ok){er.textContent=x.d.error||'Erreur';b.disabled=false;b.textContent='Confirmer la commande';return}
     CART=[];saveCart();updCart();
-    $('sheet').innerHTML='<div class="row"><b>Commande</b>'+X+'</div><div class="ok"><div style="font-size:48px">&#9989;</div><h2 style="font-size:26px;margin-bottom:12px">Commande reçue !</h2><p class="mut">Nous t\'appelons bientôt pour confirmer.<br>Total à payer à la livraison : <b>'+fmt(x.d.total)+'</b></p><button class="btn" onclick="closeM()">Fermer</button></div>';
+    $('sheet').innerHTML='<div class="row"><b>Commande</b>'+X+'</div><div class="ok"><div style="font-size:48px">&#9989;</div><h2 style="font-size:26px;margin:8px 0 12px">Commande reçue !</h2><p class="mut">Nous t\'appelons bientôt pour confirmer.<br>Total à payer à la livraison : <b style="font-family:inherit;font-size:inherit">'+fmt(x.d.total)+'</b></p><button class="btn" onclick="closeM()">Fermer</button></div>';
   }).catch(function(){er.textContent='Connexion impossible, réessaie.';b.disabled=false;b.textContent='Confirmer la commande'});
 }
 
-/* ---------- Bandeau : photos qui défilent ---------- */
+/* ---------- Photos qui défilent (à gauche du titre) ---------- */
 var HI=0,HN=0,HT=null,HP=false,HX=0;
 var ICON_PAUSE='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
 var ICON_PLAY='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 function initHero(list){
   stopHero();
-  var s=$('slides');
-  if(!list||!list.length){s.innerHTML='';$('hctl').hidden=true;HN=0;return}
+  var s=$('slides'),hl=$('hl');
+  if(!list||!list.length){s.innerHTML='';$('hctl').hidden=true;HN=0;hl.classList.remove('has');return}
   HN=list.length;HI=0;
+  hl.classList.add('has');
   s.innerHTML=list.map(function(u,i){return '<div class="slide'+(i===0?' on':'')+'" style="background-image:url(\''+esc(u)+'\')"></div>'}).join('');
   if(HN<2){$('hctl').hidden=true;return}
   $('dots').innerHTML=list.map(function(u,i){return '<button class="dot'+(i===0?' on':'')+'" aria-label="Photo '+(i+1)+'" onclick="goHero('+i+')"></button>'}).join('');
