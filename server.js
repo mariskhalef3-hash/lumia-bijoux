@@ -6,7 +6,13 @@ const { Pool } = require('pg');
 const app = express();
 app.use(express.json());
 app.use(express.static('public'));
-
+// robots.txt et plan du site : générés par le serveur (ils autorisent Google)
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send('User-agent: *\nAllow: /\n\nSitemap: https://' + req.get('host') + '/sitemap.txt\n');
+});
+app.get('/sitemap.txt', (req, res) => {
+  res.type('text/plain').send('https://' + req.get('host') + '/\n');
+});
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
@@ -347,4 +353,4 @@ app.patch('/api/admin/hero/:id', admin, async (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log('Lumia Bijoux sur http://localhost:' + port));
+app.listen(port, () => console.log('Lumia Bijoux sur http://localhost:' + port)); 
